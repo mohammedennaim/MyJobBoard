@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
-import { AuthUser } from '../../models';
+import { User } from '../../../shared/models/user.model';
 
 @Component({
   selector: 'app-header',
@@ -12,11 +12,14 @@ import { AuthUser } from '../../models';
   templateUrl: './header.component.html'
 })
 export class HeaderComponent {
-  currentUser$: Observable<AuthUser | null>;
+  @Output() openAuth = new EventEmitter<void>();
+
+  currentUser$: Observable<User | null>;
+  favoritesCount$: Observable<number> = of(0); // Mocked
   isMobileMenuOpen = false;
 
   constructor(
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     this.currentUser$ = this.authService.currentUser$;
   }
@@ -31,5 +34,9 @@ export class HeaderComponent {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  onOpenAuth(): void {
+    this.openAuth.emit();
   }
 }

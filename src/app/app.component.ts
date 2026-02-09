@@ -1,64 +1,93 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { JobService } from './core/services/job.service';
 import { Job } from './shared/models/job.model';
-import { CommonModule } from '@angular/common';
+import { JobCardComponent } from './features/jobs/job-card/job-card.component';
+import { LoginModalComponent } from './features/auth/login-modal/login-modal.component';
+import { RegisterModalComponent } from './features/auth/register-modal/register-modal.component';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, CommonModule],
-  template: `
-    <app-header></app-header>
-    <main class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-4">Job Finder - Verification</h1>
-      <div *ngIf="loading">Chargement des offres...</div>
-      <div *ngIf="error">{{ error }}</div>
-      
-      <div class="grid gap-4" *ngIf="!loading && !error">
-        <div *ngFor="let job of jobs" class="border p-4 rounded shadow">
-          <h2 class="font-bold text-xl">{{ job.title }}</h2>
-          <p class="text-gray-600">{{ job.company.display_name }} - {{ job.location.display_name }}</p>
-          <p class="mt-2">{{ job.description | slice:0:150 }}...</p>
-          <a [href]="job.redirect_url" target="_blank" class="text-blue-500 mt-2 inline-block">Voir l'offre</a>
-        </div>
-      </div>
-      
-      <router-outlet></router-outlet>
-    </main>
-  `,
-  styles: [`
-    :host {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    main {
-      flex: 1;
-    }
-  `]
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    JobCardComponent,
+    LoginModalComponent,
+    RegisterModalComponent,
+    ReactiveFormsModule
+  ],
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  title = 'JobFinder';
   jobs: Job[] = [];
-  loading = true;
+  loading = false;
   error = '';
+  showLoginModal = false;
+  showRegisterModal = false;
+  searchForm: FormGroup;
 
-  constructor(private jobService: JobService) { }
+  constructor(
+    private jobService: JobService,
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {
+    this.searchForm = this.fb.group({
+      keyword: [''],
+      location: ['']
+    });
+  }
 
   ngOnInit() {
-    this.jobService.searchJobs('developer', 'paris').subscribe({
+    this.showLoginModal = false;
+    this.showRegisterModal = false;
+    this.searchJobs();
+  }
+
+  onSearch() {
+    this.searchJobs();
+  }
+
+  searchJobs() {
+    this.loading = true;
+    this.error = '';
+    const { keyword, location } = this.searchForm.value;
+
+    const searchLocation = location || 'paris';
+    const searchKeyword = keyword || 'developer';
+
+    this.jobService.searchJobs(searchKeyword, searchLocation).subscribe({
       next: (data) => {
         this.jobs = data;
         this.loading = false;
-        console.log('Jobs fetched:', data);
       },
       error: (err) => {
-        this.error = 'Erreur lors du chargement des jobs via Adzuna API';
+        this.error = 'Erreur lors du chargement des jobs.';
         this.loading = false;
-        console.error(err);
       }
     });
+  }
+
+  onTrackApplication(job: Job) {
+    if (!this.authService.isAuthenticated()) {
+      this.showLoginModal = true;
+      return;
+    }
+    console.log('Track application:', job);
+  }
+
+  onSwitchToRegister() {
+    this.showLoginModal = false;
+    this.showRegisterModal = true;
+  }
+
+  onSwitchToLogin() {
+    this.showRegisterModal = false;
+    this.showLoginModal = true;
   }
 }

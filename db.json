@@ -41,6 +41,27 @@
       "email": "kymy@mailinator.com",
       "password": "Pa$$w0rd!",
       "id": 6
+    },
+    {
+      "firstName": "Recusandae Adipisic",
+      "lastName": "Molestias temporibus",
+      "email": "hyle@mailinator.com",
+      "password": "Pa$$w0rd!",
+      "id": 7
+    },
+    {
+      "firstName": "Dolor dolores ex nem",
+      "lastName": "Aut cumque deserunt ",
+      "email": "qapa@mailinator.com",
+      "password": "Pa$$w0rd!",
+      "id": 8
+    },
+    {
+      "firstName": "test",
+      "lastName": "test",
+      "email": "test@gmail.com",
+      "password": "123456",
+      "id": 9
     }
   ],
   "favoritesOffers": [
