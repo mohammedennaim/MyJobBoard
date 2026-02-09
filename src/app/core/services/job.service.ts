@@ -15,7 +15,7 @@ export class JobService {
 
     constructor(private http: HttpClient) { }
 
-    searchJobs(keyword?: string, location?: string, page: number = 1): Observable<Job[]> {
+    searchJobs(keyword?: string, location?: string, page: number = 1): Observable<{ jobs: Job[], totalCount: number }> {
         const country = 'fr';
         const url = `${this.apiUrl}/jobs/${country}/search/${page}`;
 
@@ -34,10 +34,13 @@ export class JobService {
         }
 
         return this.http.get<AdzunaResponse>(url, { params }).pipe(
-            map(response => response.results),
+            map(response => ({
+                jobs: response.results,
+                totalCount: response.count || 0
+            })),
             catchError(error => {
                 console.error('Error fetching jobs from Adzuna:', error);
-                return of([]);
+                return of({ jobs: [], totalCount: 0 });
             })
         );
     }

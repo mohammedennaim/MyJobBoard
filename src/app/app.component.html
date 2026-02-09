@@ -57,7 +57,7 @@
     </section>
 
     <!-- Results Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <section id="results-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded mb-6">{{ error }}</div>
 
         <div *ngIf="!loading && jobs.length > 0"
@@ -66,7 +66,12 @@
                 <h2 class="text-2xl font-bold text-slate-900">
                     Dernières offres
                 </h2>
-                <p class="text-slate-500 mt-1">{{ jobs.length }} opportunités trouvées</p>
+                <p class="text-slate-500 mt-1">{{ totalCount }} opportunités trouvées pour vous</p>
+            </div>
+
+            <div
+                class="flex items-center gap-2 text-sm text-slate-600 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm">
+                <span>Page {{ currentPage }} sur {{ totalPages }}</span>
             </div>
         </div>
 
@@ -77,6 +82,31 @@
             </div>
             }
         </div>
+
+        @if (!loading && totalPages > 1) {
+        <div class="flex justify-center mt-12 gap-2 fade-in-up delay-200">
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+                class="btn btn-outline w-10 h-10 !p-0 rounded-full disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 border-slate-300 text-slate-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            @for (page of visiblePages; track page) {
+            <button (click)="goToPage(page)" class="w-10 h-10 rounded-full font-medium transition-all duration-300"
+                [ngClass]="page === currentPage ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30 transform scale-110' : 'text-slate-600 hover:bg-slate-100 hover:text-primary-600'">
+                {{ page }}
+            </button>
+            }
+
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+                class="btn btn-outline w-10 h-10 !p-0 rounded-full disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 border-slate-300 text-slate-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+        }
 
         <div *ngIf="!loading && jobs.length === 0" class="text-center py-20 fade-in-up">
             <h3 class="text-2xl font-bold text-slate-800 mb-2">Aucune offre trouvée</h3>

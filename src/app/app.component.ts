@@ -32,6 +32,10 @@ export class AppComponent implements OnInit {
   showRegisterModal = false;
   searchForm: FormGroup;
 
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalCount = 0;
+
   constructor(
     private jobService: JobService,
     private fb: FormBuilder,
@@ -50,6 +54,7 @@ export class AppComponent implements OnInit {
   }
 
   onSearch() {
+    this.currentPage = 1;
     this.searchJobs();
   }
 
@@ -61,16 +66,55 @@ export class AppComponent implements OnInit {
     const searchLocation = location || 'paris';
     const searchKeyword = keyword || 'developer';
 
-    this.jobService.searchJobs(searchKeyword, searchLocation).subscribe({
+    this.jobService.searchJobs(searchKeyword, searchLocation, this.currentPage).subscribe({
       next: (data) => {
-        this.jobs = data;
+        this.jobs = data.jobs;
+        this.totalCount = data.totalCount;
         this.loading = false;
+        if (this.currentPage > 1) {
+          const resultsElement = document.getElementById('results-section');
+          if (resultsElement) {
+            resultsElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
       },
       error: (err) => {
         this.error = 'Erreur lors du chargement des jobs.';
         this.loading = false;
       }
     });
+  }
+
+  get totalPages(): number {
+    // Adzuna rarely returns exact count, but let's assume it does or cap it
+    // The API might return huge numbers, so let's be safe
+    return Math.ceil(this.totalCount / this.itemsPerPage);
+  }
+
+  get visiblePages(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    // Ensure start is not less than 1
+    start = Math.max(1, start);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.searchJobs();
+    }
   }
 
   onTrackApplication(job: Job) {
