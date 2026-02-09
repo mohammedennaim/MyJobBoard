@@ -1,0 +1,112 @@
+<header class="glass-panel sticky top-0 z-50 mb-8">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <a routerLink="/" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">MyJobBoard</span>
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-6">
+                <a routerLink="/" routerLinkActive="text-primary-600" [routerLinkActiveOptions]="{exact: true}"
+                    class="text-gray-600 hover:text-primary-600 transition-colors font-medium">
+                    Home
+                </a>
+                <a routerLink="/" routerLinkActive="text-primary-600" [routerLinkActiveOptions]="{exact: true}"
+                    class="text-gray-600 hover:text-primary-600 transition-colors font-medium">
+                    My Favorites
+                </a>
+                <a routerLink="/" routerLinkActive="text-primary-600" [routerLinkActiveOptions]="{exact: true}"
+                    class="text-gray-600 hover:text-primary-600 transition-colors font-medium">
+                    My Applications
+                </a>
+            
+            
+            </div>
+
+            <div class="flex items-center space-x-4">
+                @if (currentUser$ | async; as user) {
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 py-2">
+                        <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                            <span class="text-primary-600 font-medium text-sm">
+                                {{ user.firstName[0] }}{{ user.lastName[0] }}
+                            </span>
+                        </div>
+                        <span class="hidden sm:block font-medium">{{ user.firstName }}</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="absolute right-0 top-full w-48 bg-white rounded-lg shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a routerLink="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            Mon profil
+                        </a>
+                        <button (click)="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                            Déconnexion
+                        </button>
+                    </div>
+                </div>
+                } @else {
+                <a routerLink="/auth/login" class="btn btn-outline text-sm">
+                    Connexion
+                </a>
+                <a routerLink="/auth/register" class="btn btn-primary text-sm">
+                    S'inscrire
+                </a>
+                }
+            </div>
+
+            <div class="md:hidden flex items-center">
+                <button (click)="toggleMobileMenu()" class="text-gray-600 hover:text-primary-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        @if (isMobileMenuOpen) {
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                        } @else {
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                        }
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        @if (isMobileMenuOpen) {
+        <div class="md:hidden pb-4">
+            <div class="flex flex-col space-y-2">
+                <a routerLink="/" (click)="closeMobileMenu()"
+                    class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Rechercher
+                </a>
+                @if (currentUser$ | async) {
+                <a routerLink="/favorites" (click)="closeMobileMenu()"
+                    class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Favoris
+                </a>
+                <a routerLink="/applications" (click)="closeMobileMenu()"
+                    class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Candidatures
+                </a>
+                <a routerLink="/profile" (click)="closeMobileMenu()"
+                    class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Mon profil
+                </a>
+                <button (click)="logout(); closeMobileMenu()"
+                    class="px-3 py-2 text-left text-red-600 hover:bg-gray-100 rounded-lg">
+                    Déconnexion
+                </button>
+                }
+            </div>
+        </div>
+        }
+    </nav>
+</header>

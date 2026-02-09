@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles */
+body {
+  @apply bg-slate-50 text-slate-800 min-h-screen relative overflow-x-hidden;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Advanced Animated Background Mesh */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  background:
+    radial-gradient(circle at 15% 50%, rgba(3, 198, 182, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(244, 63, 94, 0.08) 0%, transparent 40%);
+  animation: bg-pulse 15s ease-in-out infinite alternate;
+}
+
+body::after {
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  z-index: -1;
+}
+
+@keyframes bg-pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Custom Component Layer */
+@layer components {
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-medium transition-all duration-300 transform relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, theme('colors.primary.600'), theme('colors.primary.500'));
+    @apply text-white shadow-lg shadow-primary-500/30 border border-transparent hover:shadow-primary-500/40 hover:-translate-y-0.5 focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-200;
+  }
+
+  .btn-outline {
+    @apply bg-transparent border-2 border-primary-500 text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+  }
+
+  .btn-danger {
+    @apply bg-white text-secondary-600 border border-secondary-200 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-700 focus:ring-secondary-500;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-300 hover:border-slate-300 shadow-sm;
+  }
+
+  /* Feature Cards */
+  .card {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft border border-white/60 p-6 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 hover:border-primary-100/50 relative overflow-hidden;
+  }
+
+  .card-hover-effect {
+    @apply hover:-translate-y-1 hover:bg-white;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase transition-colors;
+  }
+
+  .badge-pending {
+    @apply bg-slate-100 text-slate-600 border border-slate-200;
+  }
+
+  .badge-accepted {
+    @apply bg-primary-50 text-primary-700 border border-primary-200;
+  }
+
+  .badge-rejected {
+    @apply bg-secondary-50 text-secondary-700 border border-secondary-200;
+  }
+}
+
+/* Animations & Utilities */
+.glass-panel {
+  @apply bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-sm transition-all duration-300;
+}
+
+.glass-panel.scrolled {
+  @apply bg-white/90 shadow-md;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  @apply bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:1000px_100%] rounded;
+  animation: shimmer 2s infinite linear;
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered animation delays */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full border-4 border-slate-50 hover:bg-slate-400 transition-colors;
+}
