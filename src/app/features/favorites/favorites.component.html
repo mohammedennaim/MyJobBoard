@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-slate-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8 fade-in-up">
+            <h1 class="text-3xl font-bold text-slate-900">Mes Favoris</h1>
+            <p class="text-slate-500 mt-2">Retrouvez ici toutes les offres que vous avez sauvegardées.</p>
+        </div>
+
+        @if (favorites$ | async; as jobs) {
+        @if (jobs.length > 0) {
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (job of jobs; track job.id) {
+            <div class="fade-in-up" [style.animation-delay]="($index * 50) + 'ms'">
+                <app-job-card [job]="job" (trackApplication)="onTrackApplication($event)"></app-job-card>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="text-center py-20 fade-in-up bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Aucun favori pour le moment</h3>
+            <p class="text-slate-500 max-w-md mx-auto">
+                Sauvegardez les offres qui vous intéressent en cliquant sur le cœur pour les retrouver facilement ici.
+            </p>
+            <a routerLink="/" class="btn btn-primary mt-6 inline-block">
+                Parcourir les offres
+            </a>
+        </div>
+        }
+        }
+    </div>
+</div>

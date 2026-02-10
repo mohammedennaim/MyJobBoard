@@ -10,6 +10,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/register-modal/register-modal.component').then(m => m.RegisterModalComponent)
     },
     {
+        path: 'favorites',
+        loadComponent: () => import('./features/favorites/favorites.component').then(m => m.FavoritesComponent)
+    },
+    {
+        path: '',
+        loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+    },
+    {
         path: '**',
         redirectTo: ''
     }

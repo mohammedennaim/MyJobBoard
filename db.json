@@ -185,5 +185,47 @@
       "dateAdded": "2026-02-09T13:07:11.602Z",
       "id": 6
     }
+  ],
+  "favorites": [
+    {
+      "userId": 1,
+      "offerId": "5619045375",
+      "title": "Business Developer H/F",
+      "company": "OpenClassrooms",
+      "location": "Paris, Ile-de-France",
+      "url": "https://www.adzuna.fr/land/ad/5619045375?se=QI86JH4G8RG5Osaa8ZAh6w&utm_medium=api&utm_source=c2f3cdb8&v=4BA9D48466B6882CF81CB6DE08622DA27CFFA533",
+      "dateAdded": "2026-02-10T12:43:48.257Z",
+      "id": 1
+    },
+    {
+      "userId": 1,
+      "offerId": "5619045406",
+      "title": "Business Developer H/F",
+      "company": "OpenClassrooms",
+      "location": "1er Arrondissement, Paris",
+      "url": "https://www.adzuna.fr/land/ad/5619045406?se=QI86JH4G8RG5Osaa8ZAh6w&utm_medium=api&utm_source=c2f3cdb8&v=A42FD551C5F88EA26AC6F82296D57575F43AB66E",
+      "dateAdded": "2026-02-10T12:43:52.644Z",
+      "id": 2
+    },
+    {
+      "userId": 1,
+      "offerId": "5619045386",
+      "title": "Business Developer H/F",
+      "company": "OpenClassrooms",
+      "location": "8ème Arrondissement, Paris",
+      "url": "https://www.adzuna.fr/land/ad/5619045386?se=gqGaUX4G8RG5Osaa8ZAh6w&utm_medium=api&utm_source=c2f3cdb8&v=9FBBEAA22D14AC318205295B6FC658226FB8E406",
+      "dateAdded": "2026-02-10T12:45:09.725Z",
+      "id": 3
+    },
+    {
+      "userId": 1,
+      "offerId": "5529102684",
+      "title": "Business Developer",
+      "company": "PIXIE",
+      "location": "Paris, Ile-de-France",
+      "url": "https://www.adzuna.fr/land/ad/5529102684?se=QvHYfYEG8RG2OPLG6Ti8JA&utm_medium=api&utm_source=c2f3cdb8&v=99774D7317CE7168CD25BEB9915EE9FDFD488D05",
+      "dateAdded": "2026-02-10T13:07:47.994Z",
+      "id": 4
+    }
   ]
 }

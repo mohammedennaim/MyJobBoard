@@ -1,8 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { Job } from '../../../shared/models/job.model';
+import { Favorite } from '../../../shared/models/favorite';
 import { AuthService } from '../../../core/services/auth.service';
+import { selectIsFavorited, selectFavoriteByOfferId } from '../../../store/favorites/favorites.selectors';
+import * as FavoritesActions from '../../../store/favorites/favorites.action';
 
 @Component({
     selector: 'app-job-card',
@@ -10,28 +14,57 @@ import { AuthService } from '../../../core/services/auth.service';
     imports: [CommonModule],
     templateUrl: './job-card.component.html'
 })
-export class JobCardComponent implements OnInit {
+export class JobCardComponent implements OnInit, OnChanges {
     @Input({ required: true }) job!: Job;
     @Output() trackApplication = new EventEmitter<Job>();
 
-    isFavorited$: Observable<boolean> = of(false); // Mocked for now
+    isFavorited$: Observable<boolean> = of(false);
     isAuthenticated = false;
 
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private store: Store
     ) { }
 
     ngOnInit(): void {
-        // Check if authService has isAuthenticated method, if not assume false or use observable
-        // Based on previous checks, AuthService likely has currentUser$
         this.authService.currentUser$.subscribe(user => {
             this.isAuthenticated = !!user;
         });
+        this.updateFavoritedState();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['job']) {
+            this.updateFavoritedState();
+        }
+    }
+
+    private updateFavoritedState(): void {
+        if (this.job) {
+            this.isFavorited$ = this.store.select(selectIsFavorited(this.job.id));
+        }
     }
 
     onToggleFavorite(): void {
-        console.log('Toggle favorite', this.job.id);
-        // TODO: Implement favorite service logic later
+        const user = this.authService.getCurrentUser();
+        if (!user) return;
+
+        this.store.select(selectFavoriteByOfferId(this.job.id)).subscribe(existing => {
+            if (existing && existing.id) {
+                this.store.dispatch(FavoritesActions.removeFavorite({ favoriteId: existing.id }));
+            } else {
+                const favorite: Favorite = {
+                    userId: user.id,
+                    offerId: this.job.id,
+                    title: this.job.title,
+                    company: this.job.company.display_name,
+                    location: this.job.location.display_name,
+                    url: this.job.redirect_url,
+                    dateAdded: new Date().toISOString()
+                };
+                this.store.dispatch(FavoritesActions.addFavorite({ favorite }));
+            }
+        }).unsubscribe();
     }
 
     onTrackApplication(): void {
