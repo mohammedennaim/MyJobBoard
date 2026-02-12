@@ -15,14 +15,14 @@ export class JobService {
 
     constructor(private http: HttpClient) { }
 
-    searchJobs(keyword?: string, location?: string, page: number = 1): Observable<{ jobs: Job[], totalCount: number }> {
+    searchJobs(keyword?: string, location?: string, page: number = 1, resultsPerPage: number = 10): Observable<{ jobs: Job[], totalCount: number }> {
         const country = 'fr';
         const url = `${this.apiUrl}/jobs/${country}/search/${page}`;
 
         let params = new HttpParams()
             .set('app_id', this.appId)
             .set('app_key', this.appKey)
-            .set('results_per_page', '10')
+            .set('results_per_page', resultsPerPage.toString())
             .set('content-type', 'application/json');
 
         if (keyword) {

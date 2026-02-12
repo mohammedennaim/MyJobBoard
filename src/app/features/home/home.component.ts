@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
 
     currentPage = 1;
-    itemsPerPage = 10;
+    itemsPerPage = 6;
     totalCount = 0;
 
     private destroy$ = new Subject<void>();
@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         const searchLocation = location || 'paris';
         const searchKeyword = keyword || 'developer';
 
-        this.jobService.searchJobs(searchKeyword, searchLocation, this.currentPage)
+        this.jobService.searchJobs(searchKeyword, searchLocation, this.currentPage, this.itemsPerPage)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (data) => {
