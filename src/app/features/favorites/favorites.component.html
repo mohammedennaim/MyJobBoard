@@ -1,11 +1,12 @@
 <div class="min-h-screen bg-slate-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8 fade-in-up">
-            <h1 class="text-3xl font-bold text-slate-900">Mes Favoris</h1>
-            <p class="text-slate-500 mt-2">Retrouvez ici toutes les offres que vous avez sauvegardées.</p>
-        </div>
+        <app-search-bar 
+            title="Mes Favoris"
+            [placeholder]="{ keyword: 'Rechercher dans les favoris...', location: 'Ville, région...' }"
+            (search)="onSearch($event)">
+        </app-search-bar>
 
-        @if (favorites$ | async; as jobs) {
+        @if (filteredFavorites$ | async; as jobs) {
         @if (jobs.length > 0) {
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             @for (job of jobs; track job.id) {

@@ -66,7 +66,12 @@ export class JobCardComponent implements OnInit, OnDestroy {
                         company: this.job.company.display_name,
                         location: this.job.location.display_name,
                         url: this.job.redirect_url,
-                        dateAdded: new Date().toISOString()
+                        dateAdded: new Date().toISOString(),
+                        description: this.job.description,
+                        contract_time: this.job.contract_time,
+                        contract_type: this.job.contract_type,
+                        salary_min: this.job.salary_min,
+                        salary_max: this.job.salary_max
                     };
                     this.store.dispatch(FavoritesActions.addFavorite({ favorite }));
                 }

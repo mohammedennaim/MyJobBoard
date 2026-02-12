@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JobService } from '../../core/services/job.service';
 import { Job } from '../../shared/models/job.model';
 import { JobCardComponent } from '../jobs/job-card/job-card.component';
+import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal.service';
 import { PaginationService } from '../../core/services/pagination.service';
@@ -16,7 +16,7 @@ import { PaginationService } from '../../core/services/pagination.service';
     imports: [
         CommonModule,
         JobCardComponent,
-        ReactiveFormsModule
+        SearchBarComponent
     ],
     templateUrl: './home.component.html'
 })
@@ -24,26 +24,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     jobs: Job[] = [];
     loading = false;
     error = '';
-    searchForm: FormGroup;
 
     currentPage = 1;
     itemsPerPage = 6;
     totalCount = 0;
 
     private destroy$ = new Subject<void>();
+    private searchFilters = { keyword: '', location: '' };
 
     constructor(
         private jobService: JobService,
-        private fb: FormBuilder,
         private authService: AuthService,
         private modalService: ModalService,
         private paginationService: PaginationService
-    ) {
-        this.searchForm = this.fb.group({
-            keyword: [''],
-            location: ['']
-        });
-    }
+    ) { }
 
     ngOnInit() {
         this.searchJobs();
@@ -54,7 +48,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    onSearch() {
+    onSearch(filters: { keyword: string; location: string }) {
+        this.searchFilters = filters;
         this.currentPage = 1;
         this.searchJobs();
     }
@@ -62,10 +57,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     searchJobs() {
         this.loading = true;
         this.error = '';
-        const { keyword, location } = this.searchForm.value;
 
-        const searchLocation = location || 'paris';
-        const searchKeyword = keyword || 'developer';
+        const searchLocation = this.searchFilters.location || 'paris';
+        const searchKeyword = this.searchFilters.keyword || 'developer';
 
         this.jobService.searchJobs(searchKeyword, searchLocation, this.currentPage, this.itemsPerPage)
             .pipe(takeUntil(this.destroy$))

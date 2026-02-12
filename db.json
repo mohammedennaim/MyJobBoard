@@ -7,17 +7,9 @@
       "password": "Password123!",
       "id": 1
     }
-    
-    
   ],
-  "favorites": [
-    {
-      "id": 1
-    }
-  ],
+  "favorites": [],
   "applications": [
-    {
-      
-    }
+    {}
   ]
 }
