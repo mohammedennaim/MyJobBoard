@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { Job } from '../../shared/models/job.model';
 import { Favorite } from '../../shared/models/favorite';
 import { JobCardComponent } from '../jobs/job-card/job-card.component';
@@ -16,8 +16,9 @@ import { AuthService } from '../../core/services/auth.service';
     imports: [CommonModule, JobCardComponent],
     templateUrl: './favorites.component.html'
 })
-export class FavoritesComponent implements OnInit {
+export class FavoritesComponent implements OnInit, OnDestroy {
     favorites$: Observable<Job[]>;
+    private destroy$ = new Subject<void>();
 
     constructor(
         private store: Store,
@@ -29,11 +30,15 @@ export class FavoritesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Ensure favorites are loaded if not already
         const user = this.authService.getCurrentUser();
         if (user) {
             this.store.dispatch(loadFavorites({ userId: user.id }));
         }
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     private mapFavoriteToJob(favorite: Favorite): Job {
@@ -46,7 +51,7 @@ export class FavoritesComponent implements OnInit {
             location: {
                 display_name: favorite.location
             },
-            description: '', // Description is not stored in Favorite, acceptable limitation
+            description: '',
             redirect_url: favorite.url,
             created: favorite.dateAdded,
             category: {
@@ -58,6 +63,5 @@ export class FavoritesComponent implements OnInit {
 
     onTrackApplication(job: Job): void {
         console.log('Track application from favorites:', job);
-        // Future implementation: navigate to tracking or open modal
     }
 }

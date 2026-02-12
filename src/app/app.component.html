@@ -1,10 +1,10 @@
-<app-header (openAuth)="showLoginModal = true"></app-header>
+<app-header (openAuth)="onOpenAuth()"></app-header>
 
 <main class="min-h-screen bg-slate-50">
     <router-outlet></router-outlet>
 </main>
 
-<app-login-modal *ngIf="showLoginModal" (close)="showLoginModal = false"
+<app-login-modal *ngIf="showLoginModal" (close)="onCloseLogin()"
     (switchToRegister)="onSwitchToRegister()"></app-login-modal>
-<app-register-modal *ngIf="showRegisterModal" (close)="showRegisterModal = false"
+<app-register-modal *ngIf="showRegisterModal" (close)="onCloseRegister()"
     (switchToLogin)="onSwitchToLogin()"></app-register-modal>

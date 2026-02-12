@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -9,13 +11,15 @@ import { AuthService } from '../../../core/services/auth.service';
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './login-modal.component.html'
 })
-export class LoginModalComponent {
+export class LoginModalComponent implements OnDestroy {
     @Output() close = new EventEmitter<void>();
     @Output() switchToRegister = new EventEmitter<void>();
 
     authForm: FormGroup;
     isLoading = false;
     errorMessage = '';
+
+    private destroy$ = new Subject<void>();
 
     constructor(
         private fb: FormBuilder,
@@ -25,6 +29,11 @@ export class LoginModalComponent {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]]
         });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     onClose(): void {
@@ -42,15 +51,17 @@ export class LoginModalComponent {
         this.errorMessage = '';
         const { email, password } = this.authForm.value;
 
-        this.authService.login(email, password).subscribe({
-            next: () => {
-                this.isLoading = false;
-                this.close.emit();
-            },
-            error: (err) => {
-                this.isLoading = false;
-                this.errorMessage = err.message || 'Login failed';
-            }
-        });
+        this.authService.login(email, password)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: () => {
+                    this.isLoading = false;
+                    this.close.emit();
+                },
+                error: (err) => {
+                    this.isLoading = false;
+                    this.errorMessage = err.message || 'Login failed';
+                }
+            });
     }
 }

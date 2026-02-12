@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { take, takeUntil } from 'rxjs/operators';
 import { Job } from '../../../shared/models/job.model';
 import { Favorite } from '../../../shared/models/favorite';
 import { AuthService } from '../../../core/services/auth.service';
@@ -14,12 +15,14 @@ import * as FavoritesActions from '../../../store/favorites/favorites.action';
     imports: [CommonModule],
     templateUrl: './job-card.component.html'
 })
-export class JobCardComponent implements OnInit, OnChanges {
+export class JobCardComponent implements OnInit, OnDestroy {
     @Input({ required: true }) job!: Job;
     @Output() trackApplication = new EventEmitter<Job>();
 
     isFavorited$: Observable<boolean> = of(false);
     isAuthenticated = false;
+
+    private destroy$ = new Subject<void>();
 
     constructor(
         private authService: AuthService,
@@ -27,16 +30,17 @@ export class JobCardComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit(): void {
-        this.authService.currentUser$.subscribe(user => {
-            this.isAuthenticated = !!user;
-        });
+        this.authService.currentUser$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(user => {
+                this.isAuthenticated = !!user;
+            });
         this.updateFavoritedState();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['job']) {
-            this.updateFavoritedState();
-        }
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     private updateFavoritedState(): void {
@@ -49,22 +53,24 @@ export class JobCardComponent implements OnInit, OnChanges {
         const user = this.authService.getCurrentUser();
         if (!user) return;
 
-        this.store.select(selectFavoriteByOfferId(this.job.id)).subscribe(existing => {
-            if (existing && existing.id) {
-                this.store.dispatch(FavoritesActions.removeFavorite({ favoriteId: existing.id }));
-            } else {
-                const favorite: Favorite = {
-                    userId: user.id,
-                    offerId: this.job.id,
-                    title: this.job.title,
-                    company: this.job.company.display_name,
-                    location: this.job.location.display_name,
-                    url: this.job.redirect_url,
-                    dateAdded: new Date().toISOString()
-                };
-                this.store.dispatch(FavoritesActions.addFavorite({ favorite }));
-            }
-        }).unsubscribe();
+        this.store.select(selectFavoriteByOfferId(this.job.id))
+            .pipe(take(1))
+            .subscribe(existing => {
+                if (existing?.id) {
+                    this.store.dispatch(FavoritesActions.removeFavorite({ favoriteId: existing.id }));
+                } else {
+                    const favorite: Favorite = {
+                        userId: user.id,
+                        offerId: this.job.id,
+                        title: this.job.title,
+                        company: this.job.company.display_name,
+                        location: this.job.location.display_name,
+                        url: this.job.redirect_url,
+                        dateAdded: new Date().toISOString()
+                    };
+                    this.store.dispatch(FavoritesActions.addFavorite({ favorite }));
+                }
+            });
     }
 
     onTrackApplication(): void {

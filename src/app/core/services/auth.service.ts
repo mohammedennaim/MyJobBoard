@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import { User, AuthUser } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 
@@ -31,31 +31,21 @@ export class AuthService {
     }
 
     register(user: User): Observable<AuthUser> {
-        return new Observable(observer => {
-            this.http.get<User[]>(`${environment.jsonServerUrl}/users?email=${user.email}`).subscribe({
-                next: (users) => {
-                    if (users.length > 0) {
-                        observer.error(new Error('Un compte avec cet email existe déjà'));
-                        return;
-                    }
-
-                    this.http.post<User>(`${environment.jsonServerUrl}/users`, user).subscribe({
-                        next: (createdUser) => {
-                            const authUser: AuthUser = {
-                                id: createdUser.id!,
-                                firstName: createdUser.firstName,
-                                lastName: createdUser.lastName,
-                                email: createdUser.email
-                            };
-                            observer.next(authUser);
-                            observer.complete();
-                        },
-                        error: (err) => observer.error(err)
-                    });
-                },
-                error: (err) => observer.error(err)
-            });
-        });
+        return this.http.get<User[]>(`${environment.jsonServerUrl}/users?email=${user.email}`).pipe(
+            switchMap(users => {
+                if (users.length > 0) {
+                    return throwError(() => new Error('Un compte avec cet email existe déjà'));
+                }
+                return this.http.post<User>(`${environment.jsonServerUrl}/users`, user);
+            }),
+            map(createdUser => ({
+                id: createdUser.id!,
+                firstName: createdUser.firstName,
+                lastName: createdUser.lastName,
+                email: createdUser.email
+            })),
+            catchError(error => throwError(() => error))
+        );
     }
 
     login(email: string, password: string): Observable<AuthUser> {

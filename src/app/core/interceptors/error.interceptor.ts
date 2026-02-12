@@ -3,39 +3,26 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
+const ERROR_MESSAGES: Record<number, string> = {
+    0: 'Impossible de se connecter au serveur. Vérifiez que JSON Server est en cours d\'exécution.',
+    400: 'Requête invalide',
+    401: 'Non autorisé',
+    403: 'Accès refusé',
+    404: 'Ressource non trouvée',
+    500: 'Erreur serveur interne'
+};
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
-            let errorMessage = 'Une erreur est survenue';
+            const errorMessage = error.error instanceof ErrorEvent
+                ? error.error.message
+                : ERROR_MESSAGES[error.status] || `Erreur: ${error.message}`;
 
-            if (error.error instanceof ErrorEvent) {
-                errorMessage = error.error.message;
-            } else {
-                switch (error.status) {
-                    case 0:
-                        errorMessage = 'Impossible de se connecter au serveur. Vérifiez que JSON Server est en cours d\'exécution.';
-                        break;
-                    case 400:
-                        errorMessage = 'Requête invalide';
-                        break;
-                    case 401:
-                        errorMessage = 'Non autorisé';
-                        router.navigate(['/auth/login']);
-                        break;
-                    case 403:
-                        errorMessage = 'Accès refusé';
-                        break;
-                    case 404:
-                        errorMessage = 'Ressource non trouvée';
-                        break;
-                    case 500:
-                        errorMessage = 'Erreur serveur interne';
-                        break;
-                    default:
-                        errorMessage = `Erreur: ${error.message}`;
-                }
+            if (error.status === 401) {
+                router.navigate(['/auth/login']);
             }
 
             console.error('HTTP Error:', errorMessage, error);
