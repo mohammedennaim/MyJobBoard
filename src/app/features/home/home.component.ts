@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JobService } from '../../core/services/job.service';
 import { Job } from '../../shared/models/job.model';
-import { JobCardComponent } from '../jobs/job-card/job-card.component';
+import { JobCardComponent } from '../../shared/components/job-card/job-card.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal.service';

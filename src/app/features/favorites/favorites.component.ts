@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Job } from '../../shared/models/job.model';
 import { Favorite } from '../../shared/models/favorite';
-import { JobCardComponent } from '../jobs/job-card/job-card.component';
+import { JobCardComponent } from '../../shared/components/job-card/job-card.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { selectAllFavorites } from '../../store/favorites/favorites.selectors';
 import { loadFavorites } from '../../store/favorites/favorites.action';
