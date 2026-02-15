@@ -9,24 +9,24 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly STORAGE_KEY = 'jobfinder_user';
+    private readonly KEY = 'user';
     private currentUserSubject = new BehaviorSubject<AuthUser | null>(this.getStoredUser());
     public currentUser$ = this.currentUserSubject.asObservable();
 
     constructor(private http: HttpClient) { }
 
     private getStoredUser(): AuthUser | null {
-        const userJson = localStorage.getItem(this.STORAGE_KEY);
+        const userJson = localStorage.getItem(this.KEY);
         return userJson ? JSON.parse(userJson) : null;
     }
 
     private storeUser(user: AuthUser): void {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));
+        localStorage.setItem(this.KEY, JSON.stringify(user));
         this.currentUserSubject.next(user);
     }
 
     private removeStoredUser(): void {
-        localStorage.removeItem(this.STORAGE_KEY);
+        localStorage.removeItem(this.KEY);
         this.currentUserSubject.next(null);
     }
 

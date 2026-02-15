@@ -1,0 +1,41 @@
+<div class="min-h-screen bg-slate-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <app-search-bar 
+            title="Mes Candidatures"
+            [placeholder]="{ keyword: 'Rechercher dans les candidatures...', location: 'Ville, région...' }"
+            (search)="onSearch($event)">
+        </app-search-bar>
+
+        @if (filteredApplications.length > 0) {
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (app of filteredApplications; track app.id) {
+            <div class="fade-in-up" [style.animation-delay]="($index * 50) + 'ms'">
+                <app-job-card 
+                    [job]="mapApplicationToJob(app)" 
+                    [showStatusSelect]="true"
+                    [applicationStatus]="app.status"
+                    (statusChange)="onStatusChange($event)"
+                    (deleteApplication)="onDeleteApplication($event)">
+                </app-job-card>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="text-center py-20 fade-in-up bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Aucune candidature pour le moment</h3>
+            <p class="text-slate-500 max-w-md mx-auto">
+                Suivez vos candidatures en cliquant sur "Suivre" sur les offres qui vous intéressent.
+            </p>
+            <a routerLink="/" class="btn btn-primary mt-6 inline-block">
+                Parcourir les offres
+            </a>
+        </div>
+        }
+    </div>
+</div>

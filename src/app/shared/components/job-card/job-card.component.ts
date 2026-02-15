@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Observable, of, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { take, takeUntil } from 'rxjs/operators';
@@ -12,12 +13,16 @@ import * as FavoritesActions from '../../../store/favorites/favorites.action';
 @Component({
     selector: 'app-job-card',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     templateUrl: './job-card.component.html'
 })
 export class JobCardComponent implements OnInit, OnDestroy {
     @Input({ required: true }) job!: Job;
+    @Input() showStatusSelect = false;
+    @Input() applicationStatus = 'en_attente';
     @Output() trackApplication = new EventEmitter<Job>();
+    @Output() statusChange = new EventEmitter<{ job: Job; status: string }>();
+    @Output() deleteApplication = new EventEmitter<Job>();
 
     isFavorited$: Observable<boolean> = of(false);
     isAuthenticated = false;
@@ -80,6 +85,16 @@ export class JobCardComponent implements OnInit, OnDestroy {
 
     onTrackApplication(): void {
         this.trackApplication.emit(this.job);
+    }
+
+    onStatusChange(status: string): void {
+        this.statusChange.emit({ job: this.job, status });
+    }
+
+    onDeleteApplication(): void {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')) {
+            this.deleteApplication.emit(this.job);
+        }
     }
 
     truncateDescription(description: string): string {
