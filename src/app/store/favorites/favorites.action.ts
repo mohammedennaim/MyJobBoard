@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Favorite } from '../../shared/models/favorite';
 
-// Load favorites for user
 export const loadFavorites = createAction(
     '[Favorites] Load Favorites',
     props<{ userId: number }>()
@@ -17,7 +16,6 @@ export const loadFavoritesFailure = createAction(
     props<{ error: string }>()
 );
 
-// Add favorite
 export const addFavorite = createAction(
     '[Favorites] Add Favorite',
     props<{ favorite: Favorite }>()
@@ -33,7 +31,6 @@ export const addFavoriteFailure = createAction(
     props<{ error: string }>()
 );
 
-// Remove favorite
 export const removeFavorite = createAction(
     '[Favorites] Remove Favorite',
     props<{ favoriteId: number }>()
