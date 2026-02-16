@@ -9,6 +9,7 @@ import { JobCardComponent } from '../../shared/components/job-card/job-card.comp
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { ApplicationService } from '../../core/services/application.service';
 import { AuthService } from '../../core/services/auth.service';
+import { PaginationService } from '../../core/services/pagination.service';
 
 @Component({
     selector: 'app-applications',
@@ -19,12 +20,18 @@ import { AuthService } from '../../core/services/auth.service';
 export class ApplicationsComponent implements OnInit, OnDestroy {
     applications: Application[] = [];
     filteredApplications: Application[] = [];
+    paginatedApplications: Application[] = [];
     loading = false;
+    
+    currentPage = 1;
+    itemsPerPage = 6;
+    
     private destroy$ = new Subject<void>();
 
     constructor(
         private applicationService: ApplicationService,
-        private authService: AuthService
+        private authService: AuthService,
+        private paginationService: PaginationService
     ) { }
 
     ngOnInit(): void {
@@ -47,6 +54,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
                 next: (apps) => {
                     this.applications = apps;
                     this.filteredApplications = apps;
+                    this.updatePagination();
                     this.loading = false;
                 },
                 error: () => {
@@ -61,19 +69,42 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
 
         if (!keyword && !location) {
             this.filteredApplications = this.applications;
-            return;
+        } else {
+            this.filteredApplications = this.applications.filter(app => {
+                const matchKeyword = !keyword || 
+                    app.title.toLowerCase().includes(keyword) ||
+                    app.company.toLowerCase().includes(keyword);
+                
+                const matchLocation = !location || 
+                    app.location.toLowerCase().includes(location);
+
+                return matchKeyword && matchLocation;
+            });
         }
+        
+        this.currentPage = 1;
+        this.updatePagination();
+    }
 
-        this.filteredApplications = this.applications.filter(app => {
-            const matchKeyword = !keyword || 
-                app.title.toLowerCase().includes(keyword) ||
-                app.company.toLowerCase().includes(keyword);
-            
-            const matchLocation = !location || 
-                app.location.toLowerCase().includes(location);
+    updatePagination(): void {
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = start + this.itemsPerPage;
+        this.paginatedApplications = this.filteredApplications.slice(start, end);
+    }
 
-            return matchKeyword && matchLocation;
-        });
+    get totalPages(): number {
+        return this.paginationService.calculateTotalPages(this.filteredApplications.length, this.itemsPerPage);
+    }
+
+    get visiblePages(): number[] {
+        return this.paginationService.getVisiblePages(this.currentPage, this.totalPages);
+    }
+
+    goToPage(page: number): void {
+        if (this.paginationService.isValidPage(page, this.totalPages)) {
+            this.currentPage = page;
+            this.updatePagination();
+        }
     }
 
     onStatusChange(event: { job: Job; status: string }): void {
@@ -103,6 +134,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
                 next: () => {
                     this.applications = this.applications.filter(app => app.id !== application.id);
                     this.filteredApplications = this.filteredApplications.filter(app => app.id !== application.id);
+                    this.updatePagination();
                 }
             });
     }
