@@ -1,0 +1,150 @@
+<div class="min-h-screen bg-slate-50 py-8">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8 fade-in-up">
+            <h1 class="text-3xl font-bold text-slate-900">Mon Profil</h1>
+            <p class="text-slate-500 mt-1">Gérez vos informations personnelles</p>
+        </div>
+
+        <div class="card mb-6 fade-in-up delay-100">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Informations personnelles
+            </h2>
+
+            @if (successMessage) {
+                <div class="bg-green-50 text-green-700 px-4 py-2 rounded text-sm mb-4">{{ successMessage }}</div>
+            }
+            @if (errorMessage) {
+                <div class="bg-red-50 text-red-700 px-4 py-2 rounded text-sm mb-4">{{ errorMessage }}</div>
+            }
+
+            <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                        <input type="text" formControlName="firstName" class="input" placeholder="Votre prénom">
+                        @if (profileForm.get('firstName')?.touched && profileForm.get('firstName')?.invalid) {
+                            <p class="text-red-500 text-xs mt-1">
+                                @if (profileForm.get('firstName')?.errors?.['required']) { Le prénom est requis }
+                                @else if (profileForm.get('firstName')?.errors?.['minlength']) { Minimum 2 caractères }
+                            </p>
+                        }
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                        <input type="text" formControlName="lastName" class="input" placeholder="Votre nom">
+                        @if (profileForm.get('lastName')?.touched && profileForm.get('lastName')?.invalid) {
+                            <p class="text-red-500 text-xs mt-1">
+                                @if (profileForm.get('lastName')?.errors?.['required']) { Le nom est requis }
+                                @else if (profileForm.get('lastName')?.errors?.['minlength']) { Minimum 2 caractères }
+                            </p>
+                        }
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" formControlName="email" class="input" placeholder="votre@email.com">
+                    @if (profileForm.get('email')?.touched && profileForm.get('email')?.invalid) {
+                        <p class="text-red-500 text-xs mt-1">
+                            @if (profileForm.get('email')?.errors?.['required']) { L'email est requis }
+                            @else if (profileForm.get('email')?.errors?.['email']) { Veuillez entrer un email valide }
+                        </p>
+                    }
+                </div>
+
+                <button type="submit" [disabled]="profileForm.invalid || isLoading" class="btn btn-primary">
+                    @if (isLoading) {
+                        <span class="spinner mr-2"></span>
+                    }
+                    Mettre à jour
+                </button>
+            </form>
+        </div>
+
+        <div class="card mb-6 fade-in-up delay-200">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Changer le mot de passe
+            </h2>
+
+            @if (passwordSuccess) {
+                <div class="bg-green-50 text-green-700 px-4 py-2 rounded text-sm mb-4">{{ passwordSuccess }}</div>
+            }
+            @if (passwordError) {
+                <div class="bg-red-50 text-red-700 px-4 py-2 rounded text-sm mb-4">{{ passwordError }}</div>
+            }
+
+            <form [formGroup]="passwordForm" (ngSubmit)="onUpdatePassword()" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+                    <input type="password" formControlName="currentPassword" class="input" placeholder="••••••••">
+                    @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid) {
+                        <p class="text-red-500 text-xs mt-1">Le mot de passe actuel est requis</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+                    <input type="password" formControlName="newPassword" class="input" placeholder="••••••••">
+                    @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid) {
+                        <p class="text-red-500 text-xs mt-1">
+                            @if (passwordForm.get('newPassword')?.errors?.['required']) { Le nouveau mot de passe est requis }
+                            @else if (passwordForm.get('newPassword')?.errors?.['minlength']) { Minimum 6 caractères }
+                        </p>
+                    }
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
+                    <input type="password" formControlName="confirmPassword" class="input" placeholder="••••••••">
+                    @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) {
+                        <p class="text-red-500 text-xs mt-1">La confirmation est requise</p>
+                    }
+                </div>
+
+                <button type="submit" [disabled]="passwordForm.invalid || isPasswordLoading" class="btn btn-primary">
+                    @if (isPasswordLoading) {
+                        <span class="spinner mr-2"></span>
+                    }
+                    Changer le mot de passe
+                </button>
+            </form>
+        </div>
+
+        <div class="card fade-in-up delay-300 border-red-100">
+            <h2 class="text-lg font-bold text-red-600 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                Zone dangereuse
+            </h2>
+
+            <p class="text-slate-600 text-sm mb-4">
+                La suppression de votre compte est irréversible. Toutes vos données, favoris et candidatures seront définitivement supprimés.
+            </p>
+
+            @if (!showDeleteConfirm) {
+                <button (click)="toggleDeleteConfirm()" class="btn btn-danger">
+                    Supprimer mon compte
+                </button>
+            } @else {
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <p class="text-red-700 font-medium text-sm mb-3">Êtes-vous absolument sûr ?</p>
+                    <div class="flex gap-3">
+                        <button (click)="onDeleteAccount()" class="btn bg-red-600 text-white hover:bg-red-700 text-sm">
+                            Oui, supprimer mon compte
+                        </button>
+                        <button (click)="toggleDeleteConfirm()" class="btn btn-secondary text-sm">
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
