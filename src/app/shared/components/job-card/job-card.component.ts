@@ -9,24 +9,26 @@ import { Favorite } from '../../models/favorite';
 import { AuthService } from '../../../core/services/auth.service';
 import { selectIsFavorited, selectFavoriteByOfferId } from '../../../store/favorites/favorites.selectors';
 import * as FavoritesActions from '../../../store/favorites/favorites.action';
+import { RelativeDatePipe } from '../../pipes/relative-date.pipe';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
 
 @Component({
     selector: 'app-job-card',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RelativeDatePipe, TruncatePipe],
     templateUrl: './job-card.component.html'
 })
 export class JobCardComponent implements OnInit, OnDestroy {
     @Input({ required: true }) job!: Job;
     @Input() showStatusSelect = false;
     @Input() applicationStatus = 'en_attente';
+    @Input() applicationNotes = '';
     @Output() trackApplication = new EventEmitter<Job>();
     @Output() statusChange = new EventEmitter<{ job: Job; status: string }>();
     @Output() deleteApplication = new EventEmitter<Job>();
 
     isFavorited$: Observable<boolean> = of(false);
     isAuthenticated = false;
-
     private destroy$ = new Subject<void>();
 
     constructor(
@@ -97,23 +99,4 @@ export class JobCardComponent implements OnInit, OnDestroy {
         }
     }
 
-    truncateDescription(description: string): string {
-        if (!description) return '';
-        const text = description.replace(/<[^>]*>/g, '');
-        return text.length > 150 ? text.substring(0, 150) + '...' : text;
-    }
-
-    formatDate(dateString: string): string {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now.getTime() - date.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 0) return "Aujourd'hui";
-        if (diffDays === 1) return 'Hier';
-        if (diffDays < 7) return `Il y a ${diffDays} jours`;
-        if (diffDays < 30) return `Il y a ${Math.floor(diffDays / 7)} semaines`;
-        return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
-    }
 }
