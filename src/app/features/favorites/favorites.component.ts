@@ -6,11 +6,14 @@ import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Job } from '../../shared/models/job.model';
 import { Favorite } from '../../shared/models/favorite';
+import { Application } from '../../shared/models/application';
 import { JobCardComponent } from '../../shared/components/job-card/job-card.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { selectAllFavorites } from '../../store/favorites/favorites.selectors';
 import { loadFavorites } from '../../store/favorites/favorites.action';
 import { AuthService } from '../../core/services/auth.service';
+import { ApplicationService } from '../../core/services/application.service';
+import { PaginationService } from '../../core/services/pagination.service';
 
 @Component({
     selector: 'app-favorites',
@@ -23,10 +26,19 @@ export class FavoritesComponent implements OnInit, OnDestroy {
     filteredFavorites$: Observable<Job[]>;
     private destroy$ = new Subject<void>();
     private allFavorites: Job[] = [];
+    filteredList: Job[] = [];
+
+    currentPage = 1;
+    itemsPerPage = 6;
+    paginatedFavorites: Job[] = [];
+    totalPages = 0;
+    visiblePages: number[] = [];
 
     constructor(
         private store: Store,
-        private authService: AuthService
+        private authService: AuthService,
+        private applicationService: ApplicationService,
+        private paginationService: PaginationService
     ) {
         this.favorites$ = this.store.select(selectAllFavorites).pipe(
             map(favorites => favorites.map(this.mapFavoriteToJob))
@@ -42,12 +54,30 @@ export class FavoritesComponent implements OnInit, OnDestroy {
 
         this.favorites$.pipe(takeUntil(this.destroy$)).subscribe(jobs => {
             this.allFavorites = jobs;
+            this.filteredList = jobs;
+            this.currentPage = 1;
+            this.updatePagination();
         });
     }
 
     ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
+    }
+
+    updatePagination(): void {
+        this.totalPages = this.paginationService.calculateTotalPages(this.filteredList.length, this.itemsPerPage);
+        this.visiblePages = this.paginationService.getVisiblePages(this.currentPage, this.totalPages);
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        this.paginatedFavorites = this.filteredList.slice(startIndex, startIndex + this.itemsPerPage);
+    }
+
+    goToPage(page: number): void {
+        if (this.paginationService.isValidPage(page, this.totalPages)) {
+            this.currentPage = page;
+            this.updatePagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 
     private mapFavoriteToJob(favorite: Favorite): Job {
@@ -67,15 +97,39 @@ export class FavoritesComponent implements OnInit, OnDestroy {
             contract_type: favorite.contract_type,
             salary_min: favorite.salary_min,
             salary_max: favorite.salary_max,
-            category: {
-                label: 'Saved',
-                tag: 'saved'
-            }
+            // category: {
+            //     label: 'Saved',
+            //     tag: 'saved'
+            // }
         };
     }
 
     onTrackApplication(job: Job): void {
-        console.log('Track application from favorites:', job);
+        const user = this.authService.getCurrentUser();
+        if (!user) return;
+
+        const application: Application = {
+            userId: user.id,
+            offerId: String(job.id),
+            title: job.title,
+            company: job.company.display_name,
+            location: job.location.display_name,
+            url: job.redirect_url,
+            status: 'en_attente',
+            dateAdded: new Date().toISOString(),
+            description: job.description,
+            contract_time: job.contract_time,
+            contract_type: job.contract_type,
+            salary_min: job.salary_min,
+            salary_max: job.salary_max
+        };
+
+        this.applicationService.addApplication(application)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: () => alert('Candidature ajoutée avec succès !'),
+                error: (err: Error) => alert(err.message || 'Erreur lors de l\'ajout.')
+            });
     }
 
     onSearch(filters: { keyword: string; location: string }): void {
@@ -83,21 +137,20 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         const location = filters.location.toLowerCase().trim();
 
         if (!keyword && !location) {
-            this.filteredFavorites$ = this.favorites$;
-            return;
-        }
-
-        this.filteredFavorites$ = this.favorites$.pipe(
-            map(jobs => jobs.filter(job => {
+            this.filteredList = this.allFavorites;
+        } else {
+            this.filteredList = this.allFavorites.filter(job => {
                 const matchKeyword = !keyword ||
-                    job.title.toLowerCase().includes(keyword) ||
-                    job.company.display_name.toLowerCase().includes(keyword);
+                    job.title.toLowerCase().includes(keyword);
 
                 const matchLocation = !location ||
                     job.location.display_name.toLowerCase().includes(location);
 
                 return matchKeyword && matchLocation;
-            }))
-        );
+            });
+        }
+
+        this.currentPage = 1;
+        this.updatePagination();
     }
 }

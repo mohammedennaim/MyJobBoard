@@ -119,7 +119,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             location: job.location.display_name,
             url: job.redirect_url,
             status: 'en_attente',
-            notes: '',
             dateAdded: new Date().toISOString(),
             description: job.description,
             contract_time: job.contract_time,

@@ -72,8 +72,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
         } else {
             this.filteredApplications = this.applications.filter(app => {
                 const matchKeyword = !keyword || 
-                    app.title.toLowerCase().includes(keyword) ||
-                    app.company.toLowerCase().includes(keyword);
+                    app.title.toLowerCase().includes(keyword);
                 
                 const matchLocation = !location || 
                     app.location.toLowerCase().includes(location);
@@ -104,6 +103,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
         if (this.paginationService.isValidPage(page, this.totalPages)) {
             this.currentPage = page;
             this.updatePagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
@@ -152,7 +152,6 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
             contract_type: app.contract_type,
             salary_min: app.salary_min,
             salary_max: app.salary_max,
-            category: { label: 'Application', tag: 'application' }
         };
     }
 }
