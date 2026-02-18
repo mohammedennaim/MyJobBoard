@@ -10,7 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal.service';
 import { PaginationService } from '../../core/services/pagination.service';
 import { ApplicationService } from '../../core/services/application.service';
-import { Application } from '../../shared/models/application';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
     selector: 'app-home',
@@ -18,7 +18,8 @@ import { Application } from '../../shared/models/application';
     imports: [
         CommonModule,
         JobCardComponent,
-        SearchBarComponent
+        SearchBarComponent,
+        PaginationComponent
     ],
     templateUrl: './home.component.html'
 })
@@ -111,23 +112,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         const user = this.authService.getCurrentUser();
         if (!user) return;
 
-        const application: Application = {
-            userId: user.id,
-            offerId: String(job.id),
-            title: job.title,
-            company: job.company.display_name,
-            location: job.location.display_name,
-            url: job.redirect_url,
-            status: 'en_attente',
-            dateAdded: new Date().toISOString(),
-            description: job.description,
-            contract_time: job.contract_time,
-            contract_type: job.contract_type,
-            salary_min: job.salary_min,
-            salary_max: job.salary_max
-        };
-
-        this.applicationService.addApplication(application)
+        this.applicationService.trackJob(job, user.id)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: () => {

@@ -1,13 +1,14 @@
 <div class="min-h-screen bg-slate-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <app-search-bar 
-            title="Mes Favoris"
+        <app-search-bar title="Mes Favoris"
             [placeholder]="{ keyword: 'Rechercher dans les favoris...', location: 'Ville, région...' }"
             (search)="onSearch($event)">
         </app-search-bar>
 
         @if (paginatedFavorites.length > 0) {
-        <p class="text-sm text-slate-500 mb-4">Affichage {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ currentPage * itemsPerPage > filteredList.length ? filteredList.length : currentPage * itemsPerPage }} sur {{ filteredList.length }} résultat{{ filteredList.length > 1 ? 's' : '' }}</p>
+        <p class="text-sm text-slate-500 mb-4">Affichage {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ currentPage *
+            itemsPerPage > filteredList.length ? filteredList.length : currentPage * itemsPerPage }} sur {{
+            filteredList.length }} résultat{{ filteredList.length > 1 ? 's' : '' }}</p>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             @for (job of paginatedFavorites; track job.id) {
             <div class="fade-in-up" [style.animation-delay]="($index * 50) + 'ms'">
@@ -16,30 +17,9 @@
             }
         </div>
 
-        @if (totalPages > 1) {
-        <div class="flex justify-center mt-12 gap-2 fade-in-up delay-200">
-            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
-                class="btn btn-outline w-10 h-10 !p-0 rounded-full disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 border-slate-300 text-slate-600">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-
-            @for (page of visiblePages; track page) {
-            <button (click)="goToPage(page)" class="w-10 h-10 rounded-full font-medium transition-all duration-300"
-                [ngClass]="page === currentPage ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30 transform scale-110' : 'text-slate-600 hover:bg-slate-100 hover:text-primary-600'">
-                {{ page }}
-            </button>
-            }
-
-            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
-                class="btn btn-outline w-10 h-10 !p-0 rounded-full disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 border-slate-300 text-slate-600">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-        </div>
-        }
+        <app-pagination *ngIf="totalPages > 1" [currentPage]="currentPage" [totalPages]="totalPages"
+            [visiblePages]="visiblePages" (pageChange)="goToPage($event)">
+        </app-pagination>
         } @else {
         <div class="text-center py-20 fade-in-up bg-white rounded-2xl shadow-sm border border-slate-100">
             <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">

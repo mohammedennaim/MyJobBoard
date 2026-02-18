@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Application } from '../../shared/models/application';
+import { Job } from '../../shared/models/job.model';
 
 @Injectable({
     providedIn: 'root'
@@ -35,5 +36,24 @@ export class ApplicationService {
 
     deleteApplication(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+
+    trackJob(job: Job, userId: number): Observable<Application> {
+        const application: Application = {
+            userId: userId,
+            offerId: String(job.id),
+            title: job.title,
+            company: job.company.display_name,
+            location: job.location.display_name,
+            url: job.redirect_url,
+            status: 'en_attente',
+            dateAdded: new Date().toISOString(),
+            description: job.description,
+            contract_time: job.contract_time,
+            contract_type: job.contract_type,
+            salary_min: job.salary_min,
+            salary_max: job.salary_max
+        };
+        return this.addApplication(application);
     }
 }

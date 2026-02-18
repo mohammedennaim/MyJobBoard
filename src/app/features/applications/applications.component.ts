@@ -10,11 +10,12 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
 import { ApplicationService } from '../../core/services/application.service';
 import { AuthService } from '../../core/services/auth.service';
 import { PaginationService } from '../../core/services/pagination.service';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
     selector: 'app-applications',
     standalone: true,
-    imports: [CommonModule, RouterModule, JobCardComponent, SearchBarComponent],
+    imports: [CommonModule, RouterModule, JobCardComponent, SearchBarComponent, PaginationComponent],
     templateUrl: './applications.component.html'
 })
 export class ApplicationsComponent implements OnInit, OnDestroy {
@@ -22,10 +23,10 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
     filteredApplications: Application[] = [];
     paginatedApplications: Application[] = [];
     loading = false;
-    
+
     currentPage = 1;
     itemsPerPage = 6;
-    
+
     private destroy$ = new Subject<void>();
 
     constructor(
@@ -71,16 +72,16 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
             this.filteredApplications = this.applications;
         } else {
             this.filteredApplications = this.applications.filter(app => {
-                const matchKeyword = !keyword || 
+                const matchKeyword = !keyword ||
                     app.title.toLowerCase().includes(keyword);
-                
-                const matchLocation = !location || 
+
+                const matchLocation = !location ||
                     app.location.toLowerCase().includes(location);
 
                 return matchKeyword && matchLocation;
             });
         }
-        
+
         this.currentPage = 1;
         this.updatePagination();
     }

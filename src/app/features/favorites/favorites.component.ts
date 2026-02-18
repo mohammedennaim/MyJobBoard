@@ -6,7 +6,6 @@ import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Job } from '../../shared/models/job.model';
 import { Favorite } from '../../shared/models/favorite';
-import { Application } from '../../shared/models/application';
 import { JobCardComponent } from '../../shared/components/job-card/job-card.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { selectAllFavorites } from '../../store/favorites/favorites.selectors';
@@ -14,11 +13,12 @@ import { loadFavorites } from '../../store/favorites/favorites.action';
 import { AuthService } from '../../core/services/auth.service';
 import { ApplicationService } from '../../core/services/application.service';
 import { PaginationService } from '../../core/services/pagination.service';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
     selector: 'app-favorites',
     standalone: true,
-    imports: [CommonModule, RouterModule, JobCardComponent, SearchBarComponent],
+    imports: [CommonModule, RouterModule, JobCardComponent, SearchBarComponent, PaginationComponent],
     templateUrl: './favorites.component.html'
 })
 export class FavoritesComponent implements OnInit, OnDestroy {
@@ -108,23 +108,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         const user = this.authService.getCurrentUser();
         if (!user) return;
 
-        const application: Application = {
-            userId: user.id,
-            offerId: String(job.id),
-            title: job.title,
-            company: job.company.display_name,
-            location: job.location.display_name,
-            url: job.redirect_url,
-            status: 'en_attente',
-            dateAdded: new Date().toISOString(),
-            description: job.description,
-            contract_time: job.contract_time,
-            contract_type: job.contract_type,
-            salary_min: job.salary_min,
-            salary_max: job.salary_max
-        };
-
-        this.applicationService.addApplication(application)
+        this.applicationService.trackJob(job, user.id)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: () => alert('Candidature ajoutée avec succès !'),
