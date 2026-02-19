@@ -7,7 +7,6 @@ export interface Application {
     location: string;
     url: string;
     status: 'en_attente' | 'accepte' | 'refuse';
-    notes: string;
     dateAdded: string;
     description?: string;
     contract_time?: string;

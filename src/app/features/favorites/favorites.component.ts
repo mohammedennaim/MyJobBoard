@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Job } from '../../shared/models/job.model';
 import { Favorite } from '../../shared/models/favorite';
@@ -22,8 +22,6 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     templateUrl: './favorites.component.html'
 })
 export class FavoritesComponent implements OnInit, OnDestroy {
-    favorites$: Observable<Job[]>;
-    filteredFavorites$: Observable<Job[]>;
     private destroy$ = new Subject<void>();
     private allFavorites: Job[] = [];
     filteredList: Job[] = [];
@@ -39,12 +37,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         private authService: AuthService,
         private applicationService: ApplicationService,
         private paginationService: PaginationService
-    ) {
-        this.favorites$ = this.store.select(selectAllFavorites).pipe(
-            map(favorites => favorites.map(this.mapFavoriteToJob))
-        );
-        this.filteredFavorites$ = this.favorites$;
-    }
+    ) { }
 
     ngOnInit(): void {
         const user = this.authService.getCurrentUser();
@@ -52,7 +45,10 @@ export class FavoritesComponent implements OnInit, OnDestroy {
             this.store.dispatch(loadFavorites({ userId: user.id }));
         }
 
-        this.favorites$.pipe(takeUntil(this.destroy$)).subscribe(jobs => {
+        this.store.select(selectAllFavorites).pipe(
+            map(favorites => favorites.map(this.mapFavoriteToJob)),
+            takeUntil(this.destroy$)
+        ).subscribe(jobs => {
             this.allFavorites = jobs;
             this.filteredList = jobs;
             this.currentPage = 1;
@@ -96,11 +92,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
             contract_time: favorite.contract_time,
             contract_type: favorite.contract_type,
             salary_min: favorite.salary_min,
-            salary_max: favorite.salary_max,
-            // category: {
-            //     label: 'Saved',
-            //     tag: 'saved'
-            // }
+            salary_max: favorite.salary_max
         };
     }
 

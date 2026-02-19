@@ -22,7 +22,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 : ERROR_MESSAGES[error.status] || `Erreur: ${error.message}`;
 
             if (error.status === 401) {
-                router.navigate(['/auth/login']);
+                router.navigate(['/']);
             }
 
             console.error('HTTP Error:', errorMessage, error);

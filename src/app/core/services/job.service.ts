@@ -15,23 +15,34 @@ export class JobService {
 
     constructor(private http: HttpClient) { }
 
-    searchJobs(keyword?: string, location?: string, page: number = 1, resultsPerPage: number = 10): Observable<{ jobs: Job[], totalCount: number }> {
-        const country = 'fr';
-        const url = `${this.apiUrl}/jobs/${country}/search/${page}`;
-
-        let params = new HttpParams()
-            .set('app_id', this.appId)
-            .set('app_key', this.appKey)
-            .set('results_per_page', resultsPerPage.toString())
-            .set('content-type', 'application/json');
+    searchJobs(keyword?: string, location?: string, page: number = 1, resultsPerPage: number = 6): Observable<{ jobs: Job[], totalCount: number }> {
+        let params = this.buildBaseParams(resultsPerPage);
 
         if (keyword) {
             params = params.set('what', keyword);
         }
-
         if (location) {
             params = params.set('where', location);
         }
+
+        return this.fetchJobs(page, params);
+    }
+
+    getAllJobs(page: number = 1, resultsPerPage: number = 6): Observable<{ jobs: Job[], totalCount: number }> {
+        return this.fetchJobs(page, this.buildBaseParams(resultsPerPage));
+    }
+
+    private buildBaseParams(resultsPerPage: number): HttpParams {
+        return new HttpParams()
+            .set('app_id', this.appId)
+            .set('app_key', this.appKey)
+            .set('results_per_page', resultsPerPage.toString())
+            // .set('sort_by', 'date')
+            .set('content-type', 'application/json');
+    }
+
+    private fetchJobs(page: number, params: HttpParams): Observable<{ jobs: Job[], totalCount: number }> {
+        const url = `${this.apiUrl}/jobs/fr/search/${page}`;
 
         return this.http.get<AdzunaResponse>(url, { params }).pipe(
             map(response => ({

@@ -56,6 +56,9 @@
 
                     <div
                         class="absolute right-0 top-full w-48 bg-white rounded-lg shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a routerLink="/profile" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            Mon Profil
+                        </a>
                         <button (click)="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
                             Déconnexion
                         </button>
@@ -98,6 +101,10 @@
                 <a routerLink="/applications" (click)="closeMobileMenu()"
                     class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
                     Candidatures
+                </a>
+                <a routerLink="/profile" (click)="closeMobileMenu()"
+                    class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Mon Profil
                 </a>
                 <button (click)="logout(); closeMobileMenu()"
                     class="px-3 py-2 text-left text-red-600 hover:bg-gray-100 rounded-lg">

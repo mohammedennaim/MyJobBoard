@@ -1,6 +1,3 @@
-// Safe access to import.meta.env to prevent runtime errors if it's undefined
-const env = (import.meta as any).env || {};
-
 export const environment = {
     production: false,
     jsonServerUrl: import.meta.env['NG_APP_DB_URL'] || 'http://localhost:3000',

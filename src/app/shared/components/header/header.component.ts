@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AuthService } from '../../../core/services/auth.service';
-import { User } from '../../../shared/models/user.model';
+import { AuthUser } from '../../../shared/models/user.model';
 import { selectFavoritesCount } from '../../../store/favorites/favorites.selectors';
 
 @Component({
@@ -16,7 +16,7 @@ import { selectFavoritesCount } from '../../../store/favorites/favorites.selecto
 export class HeaderComponent {
   @Output() openAuth = new EventEmitter<void>();
 
-  currentUser$: Observable<User | null>;
+  currentUser$: Observable<AuthUser | null>;
   favoritesCount$: Observable<number>;
   isMobileMenuOpen = false;
 

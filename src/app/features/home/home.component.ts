@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     totalCount = 0;
 
     private destroy$ = new Subject<void>();
-    private searchFilters = { keyword: '', location: '' };
+    private searchFilters: { keyword: string; location: string } | null = null;
 
     constructor(
         private jobService: JobService,
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-        this.searchJobs();
+        this.loadJobs();
     }
 
     ngOnDestroy() {
@@ -53,34 +53,38 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     onSearch(filters: { keyword: string; location: string }) {
-        this.searchFilters = filters;
+        this.searchFilters = (filters.keyword || filters.location) ? filters : null;
         this.currentPage = 1;
-        this.searchJobs();
+        this.loadJobs();
     }
 
-    searchJobs() {
+    private loadJobs(): void {
         this.loading = true;
         this.error = '';
 
-        const searchLocation = this.searchFilters.location || 'paris';
-        const searchKeyword = this.searchFilters.keyword || 'developer';
+        const request$ = this.searchFilters
+            ? this.jobService.searchJobs(
+                this.searchFilters.keyword,
+                this.searchFilters.location,
+                this.currentPage,
+                this.itemsPerPage
+            )
+            : this.jobService.getAllJobs(this.currentPage, this.itemsPerPage);
 
-        this.jobService.searchJobs(searchKeyword, searchLocation, this.currentPage, this.itemsPerPage)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-                next: (data) => {
-                    this.jobs = data.jobs;
-                    this.totalCount = data.totalCount;
-                    this.loading = false;
-                    if (this.currentPage > 1) {
-                        this.scrollToResults();
-                    }
-                },
-                error: () => {
-                    this.error = 'Erreur lors du chargement des jobs.';
-                    this.loading = false;
+        request$.pipe(takeUntil(this.destroy$)).subscribe({
+            next: (data) => {
+                this.jobs = data.jobs;
+                this.totalCount = data.totalCount;
+                this.loading = false;
+                if (this.currentPage > 1) {
+                    this.scrollToResults();
                 }
-            });
+            },
+            error: () => {
+                this.error = 'Erreur lors du chargement des offres.';
+                this.loading = false;
+            }
+        });
     }
 
     private scrollToResults(): void {
@@ -99,7 +103,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     goToPage(page: number): void {
         if (this.paginationService.isValidPage(page, this.totalPages)) {
             this.currentPage = page;
-            this.searchJobs();
+            this.loadJobs();
         }
     }
 

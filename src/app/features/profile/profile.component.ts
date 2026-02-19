@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -26,11 +26,12 @@ export class ProfileComponent implements OnDestroy {
     showDeleteConfirm = false;
 
     private destroy$ = new Subject<void>();
-    private fb: FormBuilder = inject(FormBuilder);
-    private authService: AuthService = inject(AuthService);
-    private router: Router = inject(Router);
 
-    constructor() {
+    constructor(
+        private fb: FormBuilder,
+        private authService: AuthService,
+        private router: Router
+    ) {
         this.currentUser = this.authService.getCurrentUser();
 
         this.profileForm = this.fb.group({

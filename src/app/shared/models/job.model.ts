@@ -12,14 +12,8 @@ export interface Job {
     created: string;
     contract_time?: string;
     contract_type?: string;
-    category: {
-        label: string;
-        tag: string;
-    };
     salary_min?: number;
     salary_max?: number;
-    latitude?: number;
-    longitude?: number;
 }
 
 export interface AdzunaResponse {
