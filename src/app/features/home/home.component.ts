@@ -33,12 +33,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     currentPage = 1;
     itemsPerPage = 10;
     totalCount = 0;
-    currentSort = 'date';
-
-    sortOptions = [
-        { value: 'date', label: 'Date (récent)' },
-        { value: 'salary', label: 'Salaire' }
-    ];
 
     private destroy$ = new Subject<void>();
     private searchFilters: { keyword: string; location: string } | null = null;
@@ -66,12 +60,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loadJobs();
     }
 
-    onSortChange(sortValue: string): void {
-        this.currentSort = sortValue;
-        this.currentPage = 1;
-        this.loadJobs();
-    }
-
     private loadJobs(): void {
         this.loading = true;
         this.error = '';
@@ -81,10 +69,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.searchFilters.keyword,
                 this.searchFilters.location,
                 this.currentPage,
-                this.itemsPerPage,
-                this.currentSort
+                this.itemsPerPage
             )
-            : this.jobService.getAllJobs(this.currentPage, this.itemsPerPage, this.currentSort);
+            : this.jobService.getAllJobs(this.currentPage, this.itemsPerPage);
 
         request$.pipe(takeUntil(this.destroy$)).subscribe({
             next: (data) => {
