@@ -53,8 +53,8 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (apps) => {
-                    this.applications = apps;
-                    this.filteredApplications = apps;
+                    this.applications = apps.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()) || [];
+                    this.filteredApplications = apps.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()) || [];
                     this.updatePagination();
                     this.loading = false;
                 },

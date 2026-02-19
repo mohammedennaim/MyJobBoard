@@ -51,8 +51,8 @@ export class FavoritesComponent implements OnInit, OnDestroy {
             map(favorites => favorites.map(this.mapFavoriteToJob)),
             takeUntil(this.destroy$)
         ).subscribe(jobs => {
-            this.allFavorites = jobs;
-            this.filteredList = jobs;
+            this.allFavorites = jobs.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) || [];
+            this.filteredList = jobs.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) || [];
             this.currentPage = 1;
             this.updatePagination();
         });
