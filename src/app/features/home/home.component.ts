@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JobService } from '../../core/services/job.service';
@@ -17,6 +18,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         JobCardComponent,
         SearchBarComponent,
         PaginationComponent
@@ -31,6 +33,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     currentPage = 1;
     itemsPerPage = 6;
     totalCount = 0;
+    currentSort = 'date';
+
+    sortOptions = [
+        { value: 'date', label: 'Date (récent)' },
+        { value: 'salary', label: 'Salaire' }
+    ];
 
     private destroy$ = new Subject<void>();
     private searchFilters: { keyword: string; location: string } | null = null;
@@ -58,6 +66,12 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loadJobs();
     }
 
+    onSortChange(sortValue: string): void {
+        this.currentSort = sortValue;
+        this.currentPage = 1;
+        this.loadJobs();
+    }
+
     private loadJobs(): void {
         this.loading = true;
         this.error = '';
@@ -67,13 +81,14 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.searchFilters.keyword,
                 this.searchFilters.location,
                 this.currentPage,
-                this.itemsPerPage
+                this.itemsPerPage,
+                this.currentSort
             )
-            : this.jobService.getAllJobs(this.currentPage, this.itemsPerPage);
+            : this.jobService.getAllJobs(this.currentPage, this.itemsPerPage, this.currentSort);
 
         request$.pipe(takeUntil(this.destroy$)).subscribe({
             next: (data) => {
-                this.jobs = data.jobs;
+                this.jobs = this.sortJobs(data.jobs);
                 this.totalCount = data.totalCount;
                 this.loading = false;
                 if (this.currentPage > 1) {
@@ -85,6 +100,29 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.loading = false;
             }
         });
+    }
+
+    private sortJobs(jobs: Job[]): Job[] {
+        if (!jobs || jobs.length === 0) return jobs;
+
+        const sorted = [...jobs];
+
+        switch (this.currentSort) {
+            case 'date':
+                return sorted.sort((a, b) => {
+                    const dateA = new Date(a.created).getTime();
+                    const dateB = new Date(b.created).getTime();
+                    return dateB - dateA;
+                });
+            case 'salary':
+                return sorted.sort((a, b) => {
+                    const salaryA = a.salary_max || a.salary_min || 0;
+                    const salaryB = b.salary_max || b.salary_min || 0;
+                    return salaryB - salaryA;
+                });
+            default:
+                return sorted;
+        }
     }
 
     private scrollToResults(): void {

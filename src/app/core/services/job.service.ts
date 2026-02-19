@@ -15,11 +15,11 @@ export class JobService {
 
     constructor(private http: HttpClient) { }
 
-    searchJobs(keyword?: string, location?: string, page: number = 1, resultsPerPage: number = 6): Observable<{ jobs: Job[], totalCount: number }> {
-        let params = this.buildBaseParams(resultsPerPage);
+    searchJobs(keyword?: string, location?: string, page: number = 1, resultsPerPage: number = 6, sortBy: string = 'date'): Observable<{ jobs: Job[], totalCount: number }> {
+        let params = this.buildBaseParams(resultsPerPage, sortBy);
 
         if (keyword) {
-            params = params.set('what', keyword);
+            params = params.set('title_only', keyword);
         }
         if (location) {
             params = params.set('where', location);
@@ -28,17 +28,22 @@ export class JobService {
         return this.fetchJobs(page, params);
     }
 
-    getAllJobs(page: number = 1, resultsPerPage: number = 6): Observable<{ jobs: Job[], totalCount: number }> {
-        return this.fetchJobs(page, this.buildBaseParams(resultsPerPage));
+    getAllJobs(page: number = 1, resultsPerPage: number = 6, sortBy: string = 'date'): Observable<{ jobs: Job[], totalCount: number }> {
+        return this.fetchJobs(page, this.buildBaseParams(resultsPerPage, sortBy));
     }
 
-    private buildBaseParams(resultsPerPage: number): HttpParams {
-        return new HttpParams()
+    private buildBaseParams(resultsPerPage: number, sortBy: string = 'date'): HttpParams {
+        let params = new HttpParams()
             .set('app_id', this.appId)
             .set('app_key', this.appKey)
             .set('results_per_page', resultsPerPage.toString())
-            // .set('sort_by', 'date')
             .set('content-type', 'application/json');
+
+        if (sortBy) {
+            params = params.set('sort_by', sortBy);
+        }
+
+        return params;
     }
 
     private fetchJobs(page: number, params: HttpParams): Observable<{ jobs: Job[], totalCount: number }> {

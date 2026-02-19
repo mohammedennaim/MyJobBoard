@@ -23,9 +23,26 @@
             <p class="text-slate-500 mt-1">{{ totalCount }} opportunités trouvées pour vous</p>
         </div>
 
-        <div
-            class="flex items-center gap-2 text-sm text-slate-600 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm">
-            <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 text-sm text-slate-600 bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                </svg>
+                <label for="sort-select" class="sr-only">Trier par</label>
+                <select id="sort-select"
+                    [ngModel]="currentSort"
+                    (ngModelChange)="onSortChange($event)"
+                    class="bg-transparent border-none text-sm text-slate-700 focus:ring-0 focus:outline-none cursor-pointer pr-6 appearance-none">
+                    @for (option of sortOptions; track option.value) {
+                        <option [value]="option.value">{{ option.label }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2 text-sm text-slate-600 bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm">
+                <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+            </div>
         </div>
     </div>
 
