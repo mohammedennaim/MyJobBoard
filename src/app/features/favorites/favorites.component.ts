@@ -12,6 +12,7 @@ import { selectAllFavorites } from '../../store/favorites/favorites.selectors';
 import { loadFavorites } from '../../store/favorites/favorites.action';
 import { AuthService } from '../../core/services/auth.service';
 import { ApplicationService } from '../../core/services/application.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { PaginationService } from '../../core/services/pagination.service';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
@@ -36,6 +37,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         private store: Store,
         private authService: AuthService,
         private applicationService: ApplicationService,
+        private notificationService: NotificationService,
         private paginationService: PaginationService
     ) { }
 
@@ -103,8 +105,8 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         this.applicationService.trackJob(job, user.id)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
-                next: () => alert('Candidature ajoutée avec succès !'),
-                error: (err: Error) => alert(err.message || 'Erreur lors de l\'ajout.')
+                next: () => this.notificationService.showSuccess('Candidature ajoutée avec succès !'),
+                error: (err: Error) => this.notificationService.showError(err.message || 'Erreur lors de l\'ajout.')
             });
     }
 

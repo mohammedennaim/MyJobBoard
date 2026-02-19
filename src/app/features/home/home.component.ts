@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { JobService } from '../../core/services/job.service';
@@ -11,6 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal.service';
 import { PaginationService } from '../../core/services/pagination.service';
 import { ApplicationService } from '../../core/services/application.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
@@ -18,7 +19,6 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
         JobCardComponent,
         SearchBarComponent,
         PaginationComponent
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     error = '';
 
     currentPage = 1;
-    itemsPerPage = 10;
+    itemsPerPage = 6;
     totalCount = 0;
 
     private destroy$ = new Subject<void>();
@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         private authService: AuthService,
         private modalService: ModalService,
         private paginationService: PaginationService,
-        private applicationService: ApplicationService
+        private applicationService: ApplicationService,
+        private notificationService: NotificationService
     ) { }
 
     ngOnInit() {
@@ -122,10 +123,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: () => {
-                    alert('Candidature ajoutée avec succès !');
+                    this.notificationService.showSuccess('Candidature ajoutée avec succès !');
                 },
                 error: (err: Error) => {
-                    alert(err.message || 'Erreur lors de l\'ajout de la candidature.');
+                    this.notificationService.showError(err.message || 'Erreur lors de l\'ajout de la candidature.');
                 }
             });
     }

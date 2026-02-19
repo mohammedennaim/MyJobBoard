@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { LoginModalComponent } from './features/auth/login-modal/login-modal.component';
 import { RegisterModalComponent } from './features/auth/register-modal/register-modal.component';
+import { NotificationComponent } from './shared/components/notification/notification.component';
 import { AuthService } from './core/services/auth.service';
 import { ModalService } from './core/services/modal.service';
 import { loadFavorites } from './store/favorites/favorites.action';
@@ -19,7 +20,8 @@ import { loadFavorites } from './store/favorites/favorites.action';
     RouterOutlet,
     HeaderComponent,
     LoginModalComponent,
-    RegisterModalComponent
+    RegisterModalComponent,
+    NotificationComponent
   ],
   templateUrl: './app.component.html'
 })

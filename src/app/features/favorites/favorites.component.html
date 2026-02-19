@@ -17,9 +17,11 @@
             }
         </div>
 
-        <app-pagination *ngIf="totalPages > 1" [currentPage]="currentPage" [totalPages]="totalPages"
-            [visiblePages]="visiblePages" (pageChange)="goToPage($event)">
+        @if (totalPages > 1) {
+        <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [visiblePages]="visiblePages"
+            (pageChange)="goToPage($event)">
         </app-pagination>
+        }
         } @else {
         <div class="text-center py-20 fade-in-up bg-white rounded-2xl shadow-sm border border-slate-100">
             <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">

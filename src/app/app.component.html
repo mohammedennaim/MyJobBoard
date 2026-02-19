@@ -4,7 +4,11 @@
     <router-outlet></router-outlet>
 </main>
 
-<app-login-modal *ngIf="showLoginModal" (close)="onCloseLogin()"
-    (switchToRegister)="onSwitchToRegister()"></app-login-modal>
-<app-register-modal *ngIf="showRegisterModal" (close)="onCloseRegister()"
-    (switchToLogin)="onSwitchToLogin()"></app-register-modal>
+@if (showLoginModal) {
+<app-login-modal (close)="onCloseLogin()" (switchToRegister)="onSwitchToRegister()"></app-login-modal>
+}
+@if (showRegisterModal) {
+<app-register-modal (close)="onCloseRegister()" (switchToLogin)="onSwitchToLogin()"></app-register-modal>
+}
+
+<app-notification></app-notification>

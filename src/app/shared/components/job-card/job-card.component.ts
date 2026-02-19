@@ -29,6 +29,7 @@ export class JobCardComponent implements OnInit, OnDestroy {
 
     isFavorited$: Observable<boolean> = of(false);
     isAuthenticated = false;
+    showDeleteConfirm = false;
     private destroy$ = new Subject<void>();
 
     constructor(
@@ -93,10 +94,18 @@ export class JobCardComponent implements OnInit, OnDestroy {
         this.statusChange.emit({ job: this.job, status });
     }
 
+    askDeleteConfirmation(): void {
+        this.showDeleteConfirm = true;
+        setTimeout(() => this.showDeleteConfirm = false, 3000);
+    }
+
     onDeleteApplication(): void {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')) {
-            this.deleteApplication.emit(this.job);
-        }
+        this.showDeleteConfirm = false;
+        this.deleteApplication.emit(this.job);
+    }
+
+    cancelDelete(): void {
+        this.showDeleteConfirm = false;
     }
 
 }
