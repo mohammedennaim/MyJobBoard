@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     error = '';
 
     currentPage = 1;
-    itemsPerPage = 6;
+    itemsPerPage = 10;
     totalCount = 0;
     currentSort = 'date';
 
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         request$.pipe(takeUntil(this.destroy$)).subscribe({
             next: (data) => {
-                this.jobs = this.sortJobs(data.jobs);
+                this.jobs = data.jobs;
                 this.totalCount = data.totalCount;
                 this.loading = false;
                 if (this.currentPage > 1) {
@@ -100,29 +100,6 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.loading = false;
             }
         });
-    }
-
-    private sortJobs(jobs: Job[]): Job[] {
-        if (!jobs || jobs.length === 0) return jobs;
-
-        const sorted = [...jobs];
-
-        switch (this.currentSort) {
-            case 'date':
-                return sorted.sort((a, b) => {
-                    const dateA = new Date(a.created).getTime();
-                    const dateB = new Date(b.created).getTime();
-                    return dateB - dateA;
-                });
-            case 'salary':
-                return sorted.sort((a, b) => {
-                    const salaryA = a.salary_max || a.salary_min || 0;
-                    const salaryB = b.salary_max || b.salary_min || 0;
-                    return salaryB - salaryA;
-                });
-            default:
-                return sorted;
-        }
     }
 
     private scrollToResults(): void {
