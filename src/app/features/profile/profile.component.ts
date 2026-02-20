@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -10,7 +9,7 @@ import { AuthUser } from '../../shared/models/user.model';
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [CommonModule, RouterModule, ReactiveFormsModule],
+    imports: [RouterModule, ReactiveFormsModule],
     templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnDestroy {

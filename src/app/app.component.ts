@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
@@ -16,7 +15,6 @@ import { loadFavorites } from './store/favorites/favorites.action';
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule,
     RouterOutlet,
     HeaderComponent,
     LoginModalComponent,

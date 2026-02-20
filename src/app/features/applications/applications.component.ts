@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -9,13 +8,14 @@ import { JobCardComponent } from '../../shared/components/job-card/job-card.comp
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { ApplicationService } from '../../core/services/application.service';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { PaginationService } from '../../core/services/pagination.service';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
     selector: 'app-applications',
     standalone: true,
-    imports: [CommonModule, RouterModule, JobCardComponent, SearchBarComponent, PaginationComponent],
+    imports: [RouterModule, JobCardComponent, SearchBarComponent, PaginationComponent],
     templateUrl: './applications.component.html'
 })
 export class ApplicationsComponent implements OnInit, OnDestroy {
@@ -32,6 +32,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
     constructor(
         private applicationService: ApplicationService,
         private authService: AuthService,
+        private notificationService: NotificationService,
         private paginationService: PaginationService
     ) { }
 
@@ -121,6 +122,10 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
                     if (index !== -1) {
                         this.filteredApplications[index] = { ...application };
                     }
+                    this.notificationService.showSuccess('Statut mis à jour !');
+                },
+                error: (err: Error) => {
+                    this.notificationService.showError(err.message || 'Erreur lors de la mise à jour du statut.');
                 }
             });
     }
@@ -136,6 +141,10 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
                     this.applications = this.applications.filter(app => app.id !== application.id);
                     this.filteredApplications = this.filteredApplications.filter(app => app.id !== application.id);
                     this.updatePagination();
+                    this.notificationService.showSuccess('Candidature supprimée !');
+                },
+                error: (err: Error) => {
+                    this.notificationService.showError(err.message || 'Erreur lors de la suppression.');
                 }
             });
     }

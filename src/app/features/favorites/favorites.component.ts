@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
@@ -19,7 +18,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 @Component({
     selector: 'app-favorites',
     standalone: true,
-    imports: [CommonModule, RouterModule, JobCardComponent, SearchBarComponent, PaginationComponent],
+    imports: [RouterModule, JobCardComponent, SearchBarComponent, PaginationComponent],
     templateUrl: './favorites.component.html'
 })
 export class FavoritesComponent implements OnInit, OnDestroy {

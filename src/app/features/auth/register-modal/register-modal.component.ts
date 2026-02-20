@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -8,7 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
     selector: 'app-register-modal',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     templateUrl: './register-modal.component.html'
 })
 export class RegisterModalComponent implements OnDestroy {

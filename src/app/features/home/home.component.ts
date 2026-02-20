@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,7 +17,6 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     selector: 'app-home',
     standalone: true,
     imports: [
-        CommonModule,
         JobCardComponent,
         SearchBarComponent,
         PaginationComponent
