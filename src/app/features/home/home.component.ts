@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     totalCount = 0;
 
     private destroy$ = new Subject<void>();
-    private searchFilters: { keyword: string; location: string } | null = null;
+    searchFilters: { keyword: string; location: string } | null = null;
 
     constructor(
         private jobService: JobService,
@@ -59,7 +59,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loadJobs();
     }
 
-    private loadJobs(): void {
+    clearFilters(): void {
+        this.searchFilters = null;
+        this.currentPage = 1;
+        this.loadJobs();
+    }
+
+    loadJobs(): void {
         this.loading = true;
         this.error = '';
 

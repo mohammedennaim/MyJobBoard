@@ -1,11 +1,12 @@
-<div class="text-center mb-6 fade-in-up">
-    <h1 class="text-4xl md:text-6xl font-bold mb-6 text-slate-900 tracking-tight">
+<div class="text-center mb-8">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-slate-900 tracking-tight">
         {{ title }}
     </h1>
+    <p class="text-lg text-slate-500 max-w-2xl mx-auto">Découvrez des milliers d'offres d'emploi et trouvez votre prochain poste idéal</p>
 </div>
 
-<form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="max-w-4xl mx-auto mb-8">
-    <div class="glass-panel p-2 rounded-2xl md:rounded-full flex flex-col md:flex-row gap-2 shadow-lg">
+<form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="max-w-5xl mx-auto mb-10">
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-2 md:p-2.5 flex flex-col md:flex-row gap-2 border border-slate-100">
         <div class="flex-1 relative group">
             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                 <svg class="w-5 h-5 text-slate-400 group-focus-within:text-primary-500 transition-colors" fill="none"
@@ -15,10 +16,10 @@
                 </svg>
             </div>
             <input type="text" formControlName="keyword" [placeholder]="placeholder.keyword"
-                class="w-full h-12 md:h-14 pl-12 pr-4 bg-transparent border-none rounded-xl md:rounded-l-full focus:ring-0 text-slate-700 placeholder-slate-400 outline-none">
+                class="w-full h-12 md:h-14 pl-12 pr-4 bg-slate-50 border-0 rounded-xl focus:ring-2 focus:ring-primary-500/20 text-slate-700 placeholder-slate-400 outline-none transition-all">
         </div>
 
-        <div class="hidden md:block w-px h-8 bg-slate-200 self-center"></div>
+        <div class="hidden md:block w-px h-10 bg-slate-200 self-center"></div>
 
         <div class="flex-1 relative group">
             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
@@ -31,14 +32,17 @@
                 </svg>
             </div>
             <input type="text" formControlName="location" [placeholder]="placeholder.location"
-                class="w-full h-12 md:h-14 pl-12 pr-4 bg-transparent border-none focus:ring-0 text-slate-700 placeholder-slate-400 outline-none">
+                class="w-full h-12 md:h-14 pl-12 pr-4 bg-slate-50 border-0 rounded-xl focus:ring-2 focus:ring-primary-500/20 text-slate-700 placeholder-slate-400 outline-none transition-all">
         </div>
 
-        <button type="submit" class="btn btn-primary rounded-xl md:rounded-full h-12 md:h-14 md:px-8 shrink-0"
+        <button type="submit" class="btn btn-primary rounded-xl h-12 md:h-14 md:px-10 shrink-0 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 font-semibold"
             [disabled]="loading">
             @if (loading) {
             <span class="spinner !w-5 !h-5 !border-white/30 !border-t-white"></span>
             } @else {
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
             Rechercher
             }
         </button>

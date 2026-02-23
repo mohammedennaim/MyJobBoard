@@ -11,21 +11,6 @@
   "favorites": [
     {
       "userId": 1,
-      "offerId": "5624244345",
-      "title": "Chargé de développement culturel",
-      "company": "Openclassrooms",
-      "location": "8ème Arrondissement, Paris",
-      "url": "https://www.adzuna.fr/land/ad/5624244345",
-      "dateAdded": "2026-02-15T10:33:35.354Z",
-      "description": "Description du poste Bienvenue ! Cette opportunité fait partie d'un programme d'apprentissage proposé par OpenClassrooms.",
-      "contract_time": "full_time",
-      "contract_type": "contract",
-      "salary_min": 108000,
-      "salary_max": 192000,
-      "id": 3
-    },
-    {
-      "userId": 1,
       "offerId": "5632357966",
       "title": "CDD Chargé de la Relation Bancaire Clientèle professionnels F/H",
       "company": "La Poste",
@@ -123,22 +108,22 @@
       "description": "Le poste de Gestionnaire de Paie Senior H/F - Silae - Paris 8° Je recherche pour mon client un Gestionnaire de Paie Senior H/F dans le cadre d'un CDI. Il s'agit d'un cabinet d'expertise comptable situé à Paris 8°, à 10 minutes à pied de la gare Saint-Lazare. Facile d'accès en RER comme en métro. Vous intégrerez un cabinet de Taille Intermédiaire faisant partie d'un réseau International. Vos missions sont les suivantes : - Gestion d'un portefeuille multi conventionnel - Poste complet / 360° : pa…",
       "contract_type": "permanent",
       "id": 11
+    },
+    {
+      "userId": 1,
+      "offerId": "5636177994",
+      "title": "Stage Assistant(e) Administratif(ve) Maintenance H/F",
+      "company": "ELECTROPOLI GROUP",
+      "location": "Isigny-le-Buat, Avranches",
+      "url": "https://www.adzuna.fr/details/5636177994?utm_medium=api&utm_source=c2f3cdb8",
+      "dateAdded": "2026-02-19T16:29:38.470Z",
+      "description": "Description du poste Qui sommes-nous ? Electropoli en France, c’est : - 2 usines dans lesquelles travaillent 200 Femmes et Hommes engagé(e)s dans notre aventure - 70 ans d’expertise dans le traitement et la protection de pièces en métal (anticorrosion, adhérence, revêtement, etc.) - 1 centre de recherche pour développer des technologies innovantes et encore plus écologiques - L’ambition de devenir un des leaders de notre métier tout en contribuant activement à la protection de notre planète - 4…",
+      "contract_time": "full_time",
+      "contract_type": "contract",
+      "id": 12
     }
   ],
   "applications": [
-    {
-      "userId": 1,
-      "offerId": "5541990834",
-      "title": "Business developer automobile HF",
-      "company": "Biwiz",
-      "location": "Paris, Ile-de-France",
-      "url": "https://www.adzuna.fr/land/ad/5541990834?se=WtXzQnQK8RGOErafwVY7NA&utm_medium=api&utm_source=c2f3cdb8&v=99319839A701FE7E3667DE2864BE69573DF65991",
-      "status": "en_attente",
-      "notes": "",
-      "dateAdded": "2026-02-15T13:43:21.101Z",
-      "description": "Envie de changer de vie ? Avec BIWIZ , vous devenez Conseiller automobile indépendant et accompagnez des particuliers dans la vente ou l'achat de leur véhicule. Liberté, accompagnement et communauté : tout est réuni pour réussir votre reconversion même si vous n'êtes pas du métier. Votre mission : * Aider les particuliers à vendre ou acheter leur voiture * Être leur partenaire de confiance * Développer une activité locale, en toute indépendance Ce que Biwiz vous apporte : * Formation complète, …",
-      "id": 3
-    },
     {
       "userId": 1,
       "offerId": "5626137048",
@@ -180,7 +165,7 @@
       "company": "Openclassrooms",
       "location": "Paris, Ile-de-France",
       "url": "https://www.adzuna.fr/land/ad/5626137047?se=WtXzQnQK8RGOErafwVY7NA&utm_medium=api&utm_source=c2f3cdb8&v=CBD914168BD3AD7FDE998DE69BB3DB7075E1955A",
-      "status": "en_attente",
+      "status": "accepte",
       "notes": "",
       "dateAdded": "2026-02-15T13:43:28.068Z",
       "description": "Description du poste Bienvenue ! Cette opportunité fait partie d’un programme d’apprentissage proposé par OpenClassrooms. Qu’est-ce qu’un programme d’apprentissage ? C’est un programme qui vous permet d’apprendre tout en travaillant. Une façon intelligente et rapide de lancer votre carrière. Des milliers de personnes l’ont déjà fait avec nous. À votre tour maintenant ! Comment postuler à ce poste ? Étape 1 : Inscrivez-vous gratuitement à la formation adaptée à ce poste. Étape 2 : Une fois votre…",
@@ -224,7 +209,7 @@
       "company": "ISCOD ALTERNANCE",
       "location": "Paris, Ile-de-France",
       "url": "https://www.adzuna.fr/land/ad/5591556278?se=qgsyU1wM8RGj7eqDZ1qJ2w&utm_medium=api&utm_source=c2f3cdb8&v=E36A05846F33499280CE3E842B5318AFE7B911FB",
-      "status": "en_attente",
+      "status": "accepte",
       "dateAdded": "2026-02-17T23:56:51.415Z",
       "description": "Identifier de nouvelles opportunités clients via des actions de prospection ciblée Qualifier les leads entrants et organiser les premiers échanges (setting) Gérer les appels de découverte pour détecter les besoins des prospects Assurer les relances et conclure les ventes avec les leads qualifiés Rédiger et envoyer des séquences d'emails de closing personnalisés Mener les négociations commerciales jusqu'à la signature des contrats Assurer un suivi régulier avec les prospects et clients pour renf…",
       "id": 9

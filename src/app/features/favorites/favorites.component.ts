@@ -7,7 +7,7 @@ import { Job } from '../../shared/models/job.model';
 import { Favorite } from '../../shared/models/favorite';
 import { JobCardComponent } from '../../shared/components/job-card/job-card.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
-import { selectAllFavorites } from '../../store/favorites/favorites.selectors';
+import { selectAllFavorites, selectFavoritesLoading } from '../../store/favorites/favorites.selectors';
 import { loadFavorites } from '../../store/favorites/favorites.action';
 import { AuthService } from '../../core/services/auth.service';
 import { ApplicationService } from '../../core/services/application.service';
@@ -25,6 +25,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>();
     private allFavorites: Job[] = [];
     filteredList: Job[] = [];
+    loading = false;
 
     currentPage = 1;
     itemsPerPage = 6;
@@ -45,6 +46,10 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         if (user) {
             this.store.dispatch(loadFavorites({ userId: user.id }));
         }
+
+        this.store.select(selectFavoritesLoading).pipe(
+            takeUntil(this.destroy$)
+        ).subscribe(loading => this.loading = loading);
 
         this.store.select(selectAllFavorites).pipe(
             map(favorites => favorites.map(this.mapFavoriteToJob)),

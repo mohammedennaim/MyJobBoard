@@ -1,25 +1,35 @@
 @if (totalPages > 1) {
-<div class="flex justify-center mt-12 gap-2 fade-in-up delay-200">
-    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1"
-        class="btn btn-outline w-10 h-10 !p-0 rounded-full disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 border-slate-300 text-slate-600 transition-colors duration-200 flex items-center justify-center">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-    </button>
+<div class="flex flex-col sm:flex-row items-center justify-center mt-12 gap-4 fade-in-up delay-200">
+    <div class="text-sm text-slate-500 order-2 sm:order-1">
+        Page <span class="font-semibold text-slate-700">{{ currentPage }}</span> sur <span class="font-semibold text-slate-700">{{ totalPages }}</span>
+    </div>
+    
+    <div class="flex items-center gap-1.5 order-1 sm:order-2">
+        <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1"
+            class="btn btn-secondary w-10 h-10 !p-0 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 text-slate-600 transition-all duration-200 flex items-center justify-center"
+            title="Page précédente">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
 
-    @for (page of visiblePages; track page) {
-    <button (click)="onPageChange(page)"
-        class="w-10 h-10 rounded-full font-medium transition-all duration-300 flex items-center justify-center"
-        [ngClass]="page === currentPage ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30 transform scale-110' : 'text-slate-600 hover:bg-slate-100 hover:text-primary-600'">
-        {{ page }}
-    </button>
-    }
+        @for (page of visiblePages; track page) {
+        <button (click)="onPageChange(page)"
+            class="min-w-[40px] h-10 px-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center"
+            [ngClass]="page === currentPage 
+                ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30' 
+                : 'text-slate-600 hover:bg-slate-100 hover:text-primary-600'">
+            {{ page }}
+        </button>
+        }
 
-    <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages"
-        class="btn btn-outline w-10 h-10 !p-0 rounded-full disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 border-slate-300 text-slate-600 transition-colors duration-200 flex items-center justify-center">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-    </button>
+        <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages"
+            class="btn btn-secondary w-10 h-10 !p-0 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 text-slate-600 transition-all duration-200 flex items-center justify-center"
+            title="Page suivante">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+    </div>
 </div>
 }

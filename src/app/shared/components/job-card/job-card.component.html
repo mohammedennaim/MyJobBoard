@@ -1,11 +1,13 @@
-<div class="card card-hover-effect h-full flex flex-col group relative">
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    
     <div class="flex justify-between items-start mb-4">
         <div class="flex-1 pr-4">
             <a [href]="job.redirect_url" target="_blank" rel="noopener noreferrer"
-                class="text-lg font-bold text-slate-900 leading-tight mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 block hover:underline cursor-pointer">
+                class="text-lg font-bold text-slate-900 leading-tight mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 block">
                 {{ job.title }}
             </a>
-            <p class="text-primary-600 font-medium text-sm flex items-center">
+            <p class="text-primary-600 font-semibold text-sm flex items-center">
                 <svg class="w-4 h-4 mr-1.5 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -16,14 +18,14 @@
 
         @if (isAuthenticated) {
         <button (click)="onToggleFavorite()"
-            class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-500"
+            class="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             [class.bg-secondary-50]="isFavorited$ | async" [class.text-secondary-600]="isFavorited$ | async"
             [class.bg-slate-100]="!(isFavorited$ | async)" [class.text-slate-400]="!(isFavorited$ | async)"
             [class.hover:bg-secondary-100]="isFavorited$ | async"
             [class.hover:text-secondary-700]="isFavorited$ | async" [class.hover:bg-red-50]="!(isFavorited$ | async)"
             [class.hover:text-red-500]="!(isFavorited$ | async)"
             [title]="(isFavorited$ | async) ? 'Retirer des favoris' : 'Ajouter aux favoris'">
-            <svg class="w-5 h-5 transition-transform duration-200 active:scale-90"
+            <svg class="w-5 h-5 transition-transform duration-200"
                 [attr.fill]="(isFavorited$ | async) ? 'currentColor' : 'none'" stroke="currentColor"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -35,7 +37,7 @@
 
     <div class="flex flex-wrap gap-2 mb-4">
         <span
-            class="inline-flex items-center text-xs font-medium text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">
+            class="inline-flex items-center text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
             <svg class="w-3.5 h-3.5 mr-1.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -46,44 +48,44 @@
         </span>
 
         @if (job.contract_time) {
-        <span class="badge badge-accepted">
+        <span class="inline-flex items-center text-xs font-medium text-primary-700 bg-primary-50 px-3 py-1.5 rounded-lg border border-primary-100">
             {{ job.contract_time }}
         </span>
         }
 
         @if (job.contract_type) {
-        <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-200">
+        <span class="inline-flex items-center text-xs font-medium text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">
             {{ job.contract_type }}
         </span>
         }
 
         @if (job.salary_min) {
-        <span
-            class="inline-flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
+        <span class="inline-flex items-center text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
             <svg class="w-3.5 h-3.5 mr-1.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {{ job.salary_min }} - {{ job.salary_max }}
         </span>
         }
     </div>
 
-    <div class="mb-6">
+    <div class="mb-4 flex-grow">
         <p class="text-slate-600 text-sm leading-relaxed line-clamp-3">{{ job.description | truncate }}</p>
     </div>
 
-    <div class="mt-auto pt-4 border-t border-slate-100">
+    <div class="pt-4 border-t border-slate-100 mt-auto">
         <div class="flex items-center justify-between gap-4">
-            <span class="text-xs text-slate-400 font-medium">
+            <span class="text-xs text-slate-400 font-medium flex items-center">
+                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 {{ job.created | relativeDate }}
             </span>
 
             @if (showStatusSelect) {
             <div class="flex items-center gap-2">
-
                 <select [(ngModel)]="applicationStatus" (ngModelChange)="onStatusChange($event)"
-                    class="text-xs px-3 py-1.5 h-8 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    class="text-xs px-3 py-2 h-9 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
                     [ngClass]="{
                         'border-amber-300 bg-amber-50 text-amber-700': applicationStatus === 'en_attente',
                         'border-green-300 bg-green-50 text-green-700': applicationStatus === 'accepte',
@@ -95,7 +97,7 @@
                 </select>
                 @if (!showDeleteConfirm) {
                 <button (click)="askDeleteConfirmation()"
-                    class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center justify-center"
+                    class="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center justify-center"
                     title="Supprimer la candidature">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -105,11 +107,11 @@
                 } @else {
                 <div class="flex items-center gap-1">
                     <button (click)="onDeleteApplication()"
-                        class="text-xs px-2 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
+                        class="text-xs px-3 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium">
                         Confirmer
                     </button>
                     <button (click)="cancelDelete()"
-                        class="text-xs px-2 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+                        class="text-xs px-3 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors font-medium">
                         Annuler
                     </button>
                 </div>
@@ -118,13 +120,16 @@
             } @else {
             <div class="flex gap-2">
                 @if (isAuthenticated) {
-                <button (click)="onTrackApplication()" class="btn btn-outline text-xs !px-3 !py-1.5 h-8">
+                <button (click)="onTrackApplication()" class="btn btn-secondary text-xs !px-4 !py-2 h-9">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
                     Suivre
                 </button>
                 }
 
                 <a [href]="job.redirect_url" target="_blank" rel="noopener noreferrer"
-                    class="btn btn-primary text-xs !px-3 !py-1.5 h-8">
+                    class="btn btn-primary text-xs !px-4 !py-2 h-9 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40">
                     Voir l'offre
                     <svg class="w-3.5 h-3.5 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

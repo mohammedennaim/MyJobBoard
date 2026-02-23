@@ -1,45 +1,80 @@
-<section class="relative pt-10 pb-8 md:pt-16 md:pb-12 overflow-hidden">
+<section class="relative pt-8 pb-6 md:pt-12 md:pb-8 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="fade-in-up delay-100">
-            <app-search-bar [loading]="loading" title="Trouvez votre emploi idéal"
-                [placeholder]="{ keyword: 'Titre du poste, mots-clés...', location: 'Ville, région...' }"
-                (search)="onSearch($event)">
-            </app-search-bar>
-        </div>
+        <app-search-bar [loading]="loading" title="Trouvez votre emploi idéal"
+            [placeholder]="{ keyword: 'Titre, mots-clés, poste...', location: 'Ville, région, pays...' }"
+            (search)="onSearch($event)">
+        </app-search-bar>
     </div>
 </section>
 
 @if (loading) {
-<div class="flex flex-col items-center justify-center py-20">
-    <div class="w-10 h-10 border-4 border-slate-200 border-t-primary-600 rounded-full animate-spin"></div>
-    <p class="mt-4 text-slate-500 text-sm">Chargement des offres...</p>
-</div>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="bg-white rounded-2xl p-5 animate-pulse">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex-1 pr-4">
+                    <div class="h-6 bg-slate-200 rounded-lg w-3/4 mb-3"></div>
+                    <div class="h-4 bg-slate-100 rounded-lg w-1/2"></div>
+                </div>
+                <div class="w-9 h-9 bg-slate-100 rounded-xl"></div>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-4">
+                <div class="h-6 bg-slate-100 rounded-lg w-24"></div>
+                <div class="h-6 bg-slate-100 rounded-lg w-20"></div>
+                <div class="h-6 bg-slate-100 rounded-lg w-28"></div>
+            </div>
+            <div class="mb-4 space-y-2">
+                <div class="h-4 bg-slate-100 rounded w-full"></div>
+                <div class="h-4 bg-slate-100 rounded w-5/6"></div>
+                <div class="h-4 bg-slate-100 rounded w-4/6"></div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-between">
+                <div class="h-4 bg-slate-100 rounded w-20"></div>
+                <div class="flex gap-2">
+                    <div class="h-9 bg-slate-100 rounded-xl w-20"></div>
+                    <div class="h-9 bg-primary-100 rounded-xl w-24"></div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</section>
 }
 
-<section id="results-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+@if (!loading) {
+<section id="results-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
     @if (error) {
-    <div class="bg-red-50 text-red-600 p-4 rounded mb-6">{{ error }}</div>
+    <div class="bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-xl mb-6 flex items-center">
+        <svg class="w-5 h-5 mr-3 flex-shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div class="flex-1">
+            <p class="font-medium">{{ error }}</p>
+        </div>
+        <button (click)="loadJobs()" class="ml-4 text-sm font-medium text-red-600 hover:text-red-800 hover:underline">
+            Réessayer
+        </button>
+    </div>
     }
 
-    @if (!loading && jobs.length > 0) {
-    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 fade-in-up">
+    @if (jobs.length > 0) {
+    <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
         <div>
             <h2 class="text-2xl font-bold text-slate-900">
                 Dernières offres
             </h2>
-            <p class="text-slate-500 mt-1">{{ totalCount }} opportunités trouvées pour vous</p>
+            <p class="text-slate-500 mt-1 font-medium">{{ totalCount }} opportunités disponibles</p>
         </div>
 
-        <div class="flex items-center gap-3">
-            <div
-                class="flex items-center gap-2 text-sm text-slate-600 bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm">
-                <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-            </div>
+        <div class="flex items-center gap-2">
+            <span class="text-sm text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm font-medium">
+                Page <span class="text-slate-900">{{ currentPage }}</span> sur <span class="text-slate-900">{{ totalPages }}</span>
+            </span>
         </div>
     </div>
-    }
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         @for (job of jobs; track job.id) {
         <div class="fade-in-up" [style.animation-delay]="($index * 50) + 'ms'">
             <app-job-card [job]="job" (trackApplication)="onTrackApplication($event)"></app-job-card>
@@ -47,16 +82,29 @@
         }
     </div>
 
-    @if (!loading) {
     <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [visiblePages]="visiblePages"
         (pageChange)="goToPage($event)">
     </app-pagination>
     }
 
-    @if (!loading && jobs.length === 0) {
+    @if (jobs.length === 0 && !error) {
     <div class="text-center py-20 fade-in-up">
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">Aucune offre trouvée</h3>
-        <p class="text-slate-500">Essayez d'autres mots-clés.</p>
+        <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Aucune offre trouvée</h3>
+        <p class="text-slate-500 mb-6 max-w-sm mx-auto">Essayez d'autres mots-clés, une autre localisation ou supprimez vos filtres.</p>
+        @if (searchFilters) {
+        <button (click)="onSearch({keyword: '', location: ''})" class="btn btn-secondary">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer les filtres
+        </button>
+        }
     </div>
     }
 </section>
+}
