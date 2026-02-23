@@ -1,23 +1,20 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { map, mergeMap, catchError } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
-import { Favorite } from '../../shared/models/favorite';
+import { map, mergeMap, switchMap, catchError } from 'rxjs/operators';
+import { FavoriteService } from '../../core/services/favorite.service';
 import * as FavoritesActions from './favorites.action';
 
 @Injectable()
 export class FavoritesEffects {
     private actions$ = inject(Actions);
-    private http = inject(HttpClient);
-    private apiUrl = `${environment.jsonServerUrl}/favorites`;
+    private favoriteService = inject(FavoriteService);
 
     loadFavorites$ = createEffect(() =>
         this.actions$.pipe(
             ofType(FavoritesActions.loadFavorites),
-            mergeMap(({ userId }) =>
-                this.http.get<Favorite[]>(`${this.apiUrl}?userId=${userId}`).pipe(
+            switchMap(({ userId }) =>
+                this.favoriteService.getFavoritesByUser(userId).pipe(
                     map(favorites => FavoritesActions.loadFavoritesSuccess({ favorites })),
                     catchError(error => of(FavoritesActions.loadFavoritesFailure({ error: error.message })))
                 )
@@ -28,8 +25,8 @@ export class FavoritesEffects {
     addFavorite$ = createEffect(() =>
         this.actions$.pipe(
             ofType(FavoritesActions.addFavorite),
-            mergeMap(({ favorite }) =>
-                this.http.post<Favorite>(this.apiUrl, favorite).pipe(
+            switchMap(({ favorite }) =>
+                this.favoriteService.addFavorite(favorite).pipe(
                     map(created => FavoritesActions.addFavoriteSuccess({ favorite: created })),
                     catchError(error => of(FavoritesActions.addFavoriteFailure({ error: error.message })))
                 )
@@ -40,8 +37,8 @@ export class FavoritesEffects {
     removeFavorite$ = createEffect(() =>
         this.actions$.pipe(
             ofType(FavoritesActions.removeFavorite),
-            mergeMap(({ favoriteId }) =>
-                this.http.delete(`${this.apiUrl}/${favoriteId}`).pipe(
+            switchMap(({ favoriteId }) =>
+                this.favoriteService.removeFavorite(favoriteId).pipe(
                     map(() => FavoritesActions.removeFavoriteSuccess({ favoriteId })),
                     catchError(error => of(FavoritesActions.removeFavoriteFailure({ error: error.message })))
                 )
